@@ -1,0 +1,176 @@
+openapi: 3.0.3
+info:
+  title: FHIR Appointment API
+  version: 1.0.0
+  description: API for managing FHIR Appointment resources
+
+servers:
+  - url: https://api.example.com/fhir
+
+paths:
+  /Appointment:
+    get:
+      summary: Search for Appointments
+      operationId: searchAppointments
+      parameters:
+        - in: query
+          name: patient
+          schema:
+            type: string
+          description: The patient ID to filter appointments
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+          description: Appointment date to filter
+      responses:
+        '200':
+          description: A list of matching Appointment resources
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Bundle'
+
+    post:
+      summary: Create a new Appointment
+      operationId: createAppointment
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '201':
+          description: Appointment created
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+
+  /Appointment/{id}:
+    get:
+      summary: Get an Appointment by ID
+      operationId: getAppointmentById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Appointment found
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+
+    put:
+      summary: Update an Appointment
+      operationId: updateAppointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '200':
+          description: Appointment updated
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+
+    delete:
+      summary: Delete an Appointment
+      operationId: deleteAppointment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Appointment deleted
+
+components:
+  schemas:
+    Appointment:
+      type: object
+      required:
+        - resourceType
+        - status
+        - participant
+      properties:
+        resourceType:
+          type: string
+          enum: [Appointment]
+          example: Appointment
+        id:
+          type: string
+          example: "123"
+        status:
+          type: string
+          enum: [proposed, pending, booked, arrived, fulfilled, cancelled, noshow, entered-in-error, checked-in, waitlist]
+          example: booked
+        description:
+          type: string
+          example: Consultation with Dr. Smith
+        start:
+          type: string
+          format: date-time
+          example: "2025-04-10T09:00:00Z"
+        end:
+          type: string
+          format: date-time
+          example: "2025-04-10T09:30:00Z"
+        participant:
+          type: array
+          items:
+            type: object
+            required: [actor, status]
+            properties:
+              actor:
+                type: object
+                properties:
+                  reference:
+                    type: string
+                    example: "Patient/456"
+                  display:
+                    type: string
+                    example: "John Doe"
+              status:
+                type: string
+                enum: [accepted, declined, tentative, needs-action]
+                example: accepted
+
+    Bundle:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+          example: Bundle
+        type:
+          type: string
+          example: searchset
+        entry:
+          type: array
+          items:
+            type: object
+            properties:
+              fullUrl:
+                type: string
+                example: "https://api.example.com/fhir/Appointment/123"
+              resource:
+                $ref: '#/components/schemas/Appointment'

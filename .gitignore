@@ -1,0 +1,60 @@
+# compiled output
+/build/target
+/tmp
+/out-tsc
+/dist
+/.docusaurus
+
+# dependencies
+/node_modules
+
+# IDEs and editors
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - IntelliJ IDEA
+.idea/*
+!.idea/externalDependencies.xml
+!.idea/prettier.xml
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+.angular
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+.nx/cache
+.nx/workspace-data
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# Sonar
+.scannerwork
+test-report.xml
+sonar-project.properties
+
+# Cypress
+/apps/spreekuur-samen-ion-e2e/cypress.env.json
+/apps/spreekuur-samen-ion-e2e/cypress
+/junit.xml
+
+#iOS
+Podfile.lock
+
