@@ -1,0 +1,39 @@
+name: Pull request
+
+on:
+  workflow_dispatch:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-pr-merge-check-npm
+  cancel-in-progress: true
+env:
+  NODE_VERSION: 23
+
+jobs:
+  pr-merge-check:
+    name: 🏗️ Build
+    # Run on static IP to avoid issues with Cloudflare IP blocking. This is needed because Docusaurus resolves the openapi spec url in the build process.
+    runs-on: ubuntu-latest-static-ip
+    timeout-minutes: 15
+    steps:
+      - name: 🌳Checkout branch
+        uses: actions/checkout@v4
+      - name: 📥 Cache node_modules
+        uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: 🥜 Setup Node ${{ env.NODE_VERSION }}
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - name: ⌛NPM Install
+        if: steps.cache-modules.outputs.cache-hit != 'true' || steps.cache-cypress.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: 🏗️ Build
+        run: npm run build
