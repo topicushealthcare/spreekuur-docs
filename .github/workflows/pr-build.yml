@@ -33,7 +33,7 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
       - name: ⌛NPM Install
-        if: steps.cache-modules.outputs.cache-hit != 'true' || steps.cache-cypress.outputs.cache-hit != 'true'
+        if: steps.cache-modules.outputs.cache-hit != 'true'
         run: npm ci
       - name: 🏗️ Build
         run: npm run build
