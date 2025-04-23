@@ -59,12 +59,12 @@ const config: Config = {
         specs: [
           // You can also pass it a OpenAPI spec URL
           {
-            spec: 'http://localhost:8080/fhir/r4/api-docs',
+            spec: 'https://api-samen.test.spreekuur.nl/fhir/r4/api-docs',
             id: 'samen',
             route: '/openapi/',
           },
           {
-            spec: 'http://localhost:8500/fhir/r4/api-docs',
+            spec: 'https://webhook-gateway.test.spreekuur.nl/fhir/r4/api-docs',
             id: 'gateway',
             route: '/openapi/',
           },

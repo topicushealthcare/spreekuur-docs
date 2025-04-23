@@ -1,0 +1,85 @@
+name: Master builder
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ github.repository }}-master
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 23
+
+jobs:
+  build:
+    name: 🏗️ Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 🌳Checkout branch
+        uses: actions/checkout@v4
+      - name: 📥 Cache node_modules
+        uses: actions/cache@v4
+        id: cache-modules
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+      - name: 🥜 Setup Node ${{ env.NODE_VERSION }}
+        if: steps.cache-modules.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+      - name: ⌛NPM Install
+        if: steps.cache-modules.outputs.cache-hit != 'true' || steps.cache-cypress.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: 🏗️ Build
+        run: npm run build
+      - name: 🗜️ Create GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: "build/"
+  deploy:
+    name: 🎁 Deploy
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 🆙 Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
+  report-to-slack:
+    needs: [build, deploy]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🌳 Checkout branch
+        uses: actions/checkout@v4
+      - name: 📩 Get commit message
+        id: get-commit-message
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> "$GITHUB_OUTPUT"
+      - name: 📟 Report to Slack
+        uses: slackapi/slack-github-action@v2.0.0
+        with:
+          webhook: ${{ secrets.SLACK_GHA_DEFAULT_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "build_name": ":book: Spreekuur.nl docs - ${{ needs.deploy.outputs.page_url }}",
+              "commit_message": ${{ toJSON(steps.get-commit-message.outputs.COMMIT_MESSAGE) }},
+              "build_url": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+              "build_status": "${{ !contains(needs.*.result, 'skipped') && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure') && 'success' || 'failure' }}",
+              "icon": "${{ !contains(needs.*.result, 'skipped') && !contains(needs.*.result, 'cancelled') && !contains(needs.*.result, 'failure') && ':large_green_circle:' || ':red_circle:' }}"
+            }

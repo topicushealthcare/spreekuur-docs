@@ -50,11 +50,6 @@ Thumbs.db
 test-report.xml
 sonar-project.properties
 
-# Cypress
-/apps/spreekuur-samen-ion-e2e/cypress.env.json
-/apps/spreekuur-samen-ion-e2e/cypress
-/junit.xml
+build
 
-#iOS
-Podfile.lock
 
