@@ -94,8 +94,7 @@ be used as the username of the participant. The username will be visible for the
 
 ## Attachments
 Spreekuur.nl supports attachments in the chat. The attachment is uploaded to a CDN and the URL is added to the 
-Communication resource. The XIS should download th attachment from the cdn and store it in its own system. 
-
+Communication resource. The XIS should download the attachment from the CDN and store it in its own system. 
 A XIS can also send attachments in the same way to Spreekuur.nl. 
 
 ## Read notifications
