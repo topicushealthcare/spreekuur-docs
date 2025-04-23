@@ -16,7 +16,8 @@ env:
 jobs:
   build:
     name: 🏗️ Build
-    runs-on: ubuntu-latest
+    # Run on static IP to avoid issues with Cloudflare IP blocking. This is needed because Docusaurus resolves the openapi spec url in the build process.
+    runs-on: ubuntu-latest-static-ip
     timeout-minutes: 15
     steps:
       - name: 🌳Checkout branch
@@ -61,7 +62,7 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4.0.5
   report-to-slack:
-    needs: [build, deploy]
+    needs: [ build, deploy ]
     if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
