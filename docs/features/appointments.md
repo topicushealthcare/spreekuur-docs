@@ -1,6 +1,6 @@
 # Appointments
 
-**Availabillity:**
+**Availability:**
 
 | Environment | status       |
 |-------------|--------------|
