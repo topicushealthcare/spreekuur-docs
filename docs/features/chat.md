@@ -10,26 +10,9 @@ sidebar_position: 2
 | Acceptance  | ✅ Available  |
 | Production  | ✅ Available  |
 
-**FHIR Resources:**
-* [Communication](../api/api.mdx#tag/Communication)
-* [Encounter](../api/api.mdx#tag/Encounter)
-
 ## Functional summary
 With the chat functionality, Spreekuur.nl offers a way for practitioners to communicate with patients via chat. This chat
 can be started by the practitioner directly or by the patient by creating an e-consult.
-
-### Authorization model
-The authorization model for the chat functionality is based on a system trust relation. Authentication for this functionality
-is not based on OAuth Token Exchange but OAuth Client Credentials Grant. This means that the BSN of th patient is not 
-included in the JWT token, but provided in the FHIR Communication resource.
-
-#### XIS to Spreekuur.nl
-The XIS can start a chat with any Spreekuur.nl user which has the given practice configured in its profile. It's the 
-XIS responsibility to check which practitioners are allowed to start or see specific chats.
-
-#### Spreekuur.nl to XIS
-At the moment, a Spreekuur.nl user can only start a chat with a practice and not a specific practitioner. 
-The XIS is responsible for routing the message to the correct practitioner.
 
 ## Technical summary
 Spreekuur.nl uses a chat service to facility the chat functionality. The Spreekuur.nl user interacts directly with this 
@@ -70,13 +53,24 @@ sequenceDiagram
     Chat server->>Patient (User): Send message to patient
 ```
 
+## Authorization model
+The authorization model for the chat functionality is based on a system trust relation. Authentication for this functionality
+is not based on OAuth Token Exchange but OAuth Client Credentials Grant. This means that the BSN of th patient is not
+included in the JWT token, but provided in the FHIR Communication resource.
+
+#### XIS to Spreekuur.nl
+The XIS can start a chat with any Spreekuur.nl user which has the given practice configured in its profile. It's the
+XIS responsibility to check which practitioners are allowed to start or see specific chats.
+
+#### Spreekuur.nl to XIS
+At the moment, a Spreekuur.nl user can only start a chat with a practice and not a specific practitioner.
+The XIS is responsible for routing the message to the correct practitioner.
+
 ## Create channel by XIS
 When a Communication resource is received, Spreekuur.nl checks if a channel with the given `Communication.encounter.identifier`
 already exists. If it does, the message is added to the existing channel. If it does not, a new channel is created with 
 the given `Communication.encounter.identifier` as id and `Communication.topic.text` as the channel name. The
 `Communication.payload` with type "StringType" is added as the first message to the new channel.
-
-### Identification of the Spreekuur.nl user
 
 ## Close channel by XIS
 To close a channel, the XIS can send a [Encounter](../api/api.mdx#tag/Encounter) with `Encounter.status` set to

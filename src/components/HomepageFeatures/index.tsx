@@ -11,11 +11,10 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
     {
-        title: 'Open and transparent',
+        title: '',
         Svg: require('@site/static/img/su-rocket.svg').default,
         description: (
             <>
-                Spreekuur.nl philosophy is to be open and transparent. The way we connect with XIS'es is publicly available.
             </>
         ),
     },
@@ -24,16 +23,15 @@ const FeatureList: FeatureItem[] = [
         Svg: require('@site/static/img/fhir-logo.svg').default,
         description: (
             <>
-                Spreekuur.nl provides an API based on FHIR standards.
+                Spreekuur.nl FHIR API documentation to integrate with XIS's.
             </>
         ),
     },
     {
-        title: 'Secure by design',
+        title: '',
         Svg: require('@site/static/img/su-hand.svg').default,
         description: (
             <>
-                By using OAuth Token Exchange we ensure all requests to XIS'es are made from a patient authenticated by Spreekuur.nl.
             </>
         ),
     },
