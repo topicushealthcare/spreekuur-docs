@@ -1,37 +1,98 @@
 openapi: 3.0.3
 info:
-  title: FHIR Appointment API
+  title: FHIR API
   version: 1.0.0
-  description: API for managing FHIR Appointment resources
-
-servers:
-  - url: https://api.example.com/fhir
+  description: API which Spreekuur.nl needs to communicate with the XIS.
 
 paths:
+  /ValueSet/BookableAppointmentTypes:
+    get:
+      summary: Get Bookable Appointment Types
+      operationId: getBookableAppointmentTypes
+      responses:
+        '200':
+          description: A list of bookable appointment types
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/AppointmentType'
+  /PractitionerRole:
+    get:
+      summary: Search for Practitioner Roles
+      operationId: getPractitionerRoles
+      responses:
+        '200':
+          description: A list of practitioner roles
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/PractitionerRoleSearchResultBundle'
+  /Schedule:
+    get:
+      summary: Search for Schedules
+      operationId: getSchedules
+      parameters:
+        - in: query
+          name: service-category
+          schema:
+            type: string
+          description: The service category a schedule is related to. System and value should be provided in the format "system|value"
+      responses:
+        '200':
+          description: A list of schedules
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/ScheduleSearchResultBundle'
+  /Slot:
+    get:
+      summary: Search for available slots
+      operationId: getSlots
+      parameters:
+        - in: query
+          name: service-category
+          schema:
+            type: string
+          description: The service category a slot is related to. System and value should be provided in the format "system|value"
+        - in: query
+          name: schedule.date=ge
+          schema:
+            type: string
+          description: The date in ISO-8601 from which to search for available slots.
+        - in: query
+          name: schedule.date=le
+          schema:
+            type: string
+          description: The date in ISO-8601 to which to search for available slots. 
+        - in: query
+          name: schedule.actor:PractitionerRole
+          schema:
+            type: string
+          description: A comma seperated list of PractitionerRole id's which are related to the slots
+      responses:
+        '200':
+          description: A list of slots
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/SlotSearchResultBundle'
   /Appointment:
     get:
       summary: Search for Appointments
       operationId: searchAppointments
       parameters:
         - in: query
-          name: patient
+          name: id
           schema:
             type: string
-          description: The patient ID to filter appointments
-        - in: query
-          name: date
-          schema:
-            type: string
-            format: date
-          description: Appointment date to filter
+          description: The appointment id to search for
       responses:
         '200':
           description: A list of matching Appointment resources
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/Bundle'
-
+                $ref: '#/components/schemas/AppointmentSearchResultBundle'
     post:
       summary: Create a new Appointment
       operationId: createAppointment
@@ -44,88 +105,175 @@ paths:
       responses:
         '201':
           description: Appointment created
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-
-  /Appointment/{id}:
-    get:
-      summary: Get an Appointment by ID
-      operationId: getAppointmentById
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Appointment found
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-
-    put:
-      summary: Update an Appointment
-      operationId: updateAppointment
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+  /AppointmentResponse:
+    post:
+      summary: Cancel an appointment with an Appointment Response
+      operationId: createAppointmentResponse
       requestBody:
         required: true
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              $ref: '#/components/schemas/AppointmentResponse'
       responses:
-        '200':
-          description: Appointment updated
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-
-    delete:
-      summary: Delete an Appointment
-      operationId: deleteAppointment
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: Appointment deleted
+        '201':
+          description: Appointment response created
 
 components:
   schemas:
-    Appointment:
+    AppointmentType:
       type: object
-      required:
-        - resourceType
-        - status
-        - participant
       properties:
         resourceType:
           type: string
-          enum: [Appointment]
-          example: Appointment
+          enum: [ AppointmentType ]
+          example: AppointmentType
+        compose:
+          type: object
+          required: [ include ]
+          properties:
+            include:
+              type: array
+              items:
+                type: object
+                required: [ system, concept ]
+                properties:
+                  actor:
+                    type: object
+                    properties:
+                      system:
+                        type: string
+                        example: "http://www.example-xis.nl/ns/communication-type"
+                      concept:
+                        type: object
+                        required: [ code, display ]
+                        properties:
+                          code:
+                            type: string
+                            example: "E-CONSULT"
+                          display:
+                            type: string
+                            example: "E-Consult"
+    PractitionerRoleSearchResultBundle:
+      type: object
+      required: [ resourceType, entry ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Bundle ]
+          example: Bundle
+        entry:
+          type: array
+          items:
+            type: object
+            required: [ fullUrl, resource ]
+            properties:
+              fullUrl:
+                type: string
+                example: "https://api.example-xis.com/fhir/PractitionerRole/123"
+              resource:
+                $ref: '#/components/schemas/PractitionerRole'
+    PractitionerRole:
+      type: object
+      required: [ resourceType, id, name, speciality ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ PractitionerRole ]
+          example: PractitionerRole
         id:
           type: string
-          example: "123"
+          example: 123
+        name:
+          type: string
+          example: "Dr. John Doe"
+        speciality:
+          type: object
+          properties:
+            coding:
+              type: array
+              items:
+                type: object
+                required: [ system, code, display ]
+                properties:
+                  system:
+                    type: string
+                    example: "http://www.example-xis.nl/ns/speciality"
+                  code:
+                    type: string
+                    example: "0100"
+                  display:
+                    type: string
+                    example: "Huisartsen, niet nader gespecificeerd"
+    ScheduleSearchResultBundle:
+      type: object
+      required: [ resourceType, type ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Bundle ]
+          example: Bundle
+        type:
+          type: string
+          enum: [ searchset ]
+          example: searchset
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+    Schedule:
+      type: object
+      required: [ resourceType, id, serviceCategory, actor ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Schedule ]
+          example: Schedule
+        id:
+          type: string
+          example: 123
+        serviceCategory:
+          $ref: '#/components/schemas/serviceCategory'
+        actor:
+          type: array
+          items:
+            type: object
+            required: [ reference ]
+            properties:
+              reference:
+                type: string
+                example: "PractitionerRole/topicus-practitioner-1-practitionerrole-1"
+    SlotSearchResultBundle:
+      type: object
+      required: [ resourceType, type ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Bundle ]
+          example: Bundle
+        type:
+          type: string
+          enum: [ searchset ]
+          example: searchset
+        entry:
+          type: array
+          items:
+            $ref: '#/components/schemas/Slot'
+    Slot:
+      type: object
+      required: [ resourceType, id, status, start, end, serviceCategory, extension, slotType ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Slot ]
+          example: Slot
+        id:
+          type: string
+          example: 123
         status:
           type: string
-          enum: [proposed, pending, booked, arrived, fulfilled, cancelled, noshow, entered-in-error, checked-in, waitlist]
-          example: booked
-        description:
-          type: string
-          example: Consultation with Dr. Smith
+          enum: [ free, busy, needs-action ]
+          example: free
         start:
           type: string
           format: date-time
@@ -134,32 +282,52 @@ components:
           type: string
           format: date-time
           example: "2025-04-10T09:30:00Z"
-        participant:
+        serviceCategory:
+          $ref: '#/components/schemas/serviceCategory'
+        extension:
           type: array
           items:
             type: object
-            required: [actor, status]
+            required: [ url, valueReference ]
             properties:
-              actor:
+              url:
+                type: string
+                example: "urn:extension:actor"
+              valueReference:
                 type: object
+                required: [ reference, display ]
                 properties:
                   reference:
                     type: string
-                    example: "Patient/456"
+                    example: "PractitionerRole/topicus-practitioner-1-practitionerrole-1"
                   display:
                     type: string
-                    example: "John Doe"
-              status:
-                type: string
-                enum: [accepted, declined, tentative, needs-action]
-                example: accepted
+                    example: "Dokter Jansen"
+        slotType:
+          type: object
+          properties:
+            coding:
+              type: array
+              items:
+                type: object
+                required: [ system, code, display ]
+                properties:
+                  system:
+                    type: string
+                    example: "http://www.example-xis.nl/ns/slot-type"
+                  code:
+                    type: string
+                    example: "E-CONSULT"
+                  display:
+                    type: string
+                    example: "E-Consult"
 
-    Bundle:
+    AppointmentSearchResultBundle:
       type: object
       properties:
         resourceType:
           type: string
-          enum: [Bundle]
+          enum: [ Bundle ]
           example: Bundle
         type:
           type: string
@@ -174,3 +342,124 @@ components:
                 example: "https://api.example.com/fhir/Appointment/123"
               resource:
                 $ref: '#/components/schemas/Appointment'
+    Appointment:
+      type: object
+      required:
+        - resourceType
+        - id
+        - status
+        - start
+        - end
+        - participant
+        - serviceCategory
+        - comment
+        - participant
+      properties:
+        resourceType:
+          type: string
+          enum: [ Appointment ]
+          example: Appointment
+        id:
+          type: string
+          example: "123"
+        status:
+          type: string
+          enum: [ proposed, booked, cancelled ]
+          example: proposed
+        start:
+          type: string
+          format: date-time
+          example: "2025-04-10T09:00:00Z"
+        end:
+          type: string
+          format: date-time
+          example: "2025-04-10T09:30:00Z"
+        comment:
+          type: string
+          example: "Please arrive 10 minutes early."
+        serviceCategory:
+          $ref: '#/components/schemas/serviceCategory'
+        participant:
+          description: "When the appointment is created, two participants are added: the patient and the practitioner. When the approval flow is enabled, the practitioner has the status 'needs-action'. If not, the status is 'accepted' The patient always has the status 'accepted'."
+          type: array
+          items:
+            type: object
+            required: [ actor, status ]
+            properties:
+              actor:
+                type: object
+                required: [ reference, display, required ]
+                properties:
+                  reference:
+                    type: string
+                    example: "Patient/456"
+                  display:
+                    type: string
+                    example: "John Doe"
+                  required:
+                    type: string
+                    example: required
+              status:
+                type: string
+                enum: [ needs-action, accepted ]
+                example: needs-action
+    serviceCategory:
+      type: array
+      items:
+        type: object
+        required: [ coding ]
+        properties:
+          coding:
+            type: array
+            items:
+              type: object
+              required: [ system, code, display ]
+              properties:
+                system:
+                  type: string
+                  example: "http://www.example-xis.nl/ns/communication-type"
+                code:
+                  type: string
+                  example: "E-CONSULT"
+                display:
+                  type: string
+                  example: "E-Consult"
+    AppointmentResponse:
+      type: object
+      required: [ actor, comment, appointment, participantStatus ]
+      properties:
+        actor:
+          type: object
+          required: [ reference ]
+          properties:
+            reference:
+              type: object
+              required: [ identifier ]
+              properties:
+                identifier:
+                  type: array
+                  items:
+                    type: object
+                    required: [ system, value ]
+                    properties:
+                      system:
+                        type: string
+                        example: "http://fhir.nl/fhir/NamingSystem/bsn"
+                      value:
+                        type: string
+                        example: "123456789"
+        comment:
+          type: string
+          example: "Deze afspraak is afgezegd door de patiënt via Spreekuur.nl"
+        appointment:
+          required: [ reference ]
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "Appointment/123"
+        participantStatus:
+          type: string
+          enum: [ declined ]
+          example: declined
+          

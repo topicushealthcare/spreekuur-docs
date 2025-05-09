@@ -24,6 +24,20 @@ sequenceDiagram
     XIS-->>Spreekuur.nl: Return response
 ```
 
+#### Authentication from Spreekuur.nl to XIS without currently logged in patient
+In some cases, Spreekuur.nl needs to access the XIS API without a currently logged in patient. In this case, Spreekuur.nl
+will use the [OAuth Client Credentials Grant](https://datatracker.ietf.org/doc/html/rfc6749#section-4.4) specification.
+
+```mermaid
+sequenceDiagram
+    participant Spreekuur.nl
+    participant XIS
+    participant Authorization Server
+    Spreekuur.nl->>Authorization Server: Request access token
+    Authorization Server-->> Spreekuur.nl: Return access token
+    Spreekuur.nl->> XIS: Use access token to access Spreekuur.nl API
+```
+
 ### Authentication from XIS to Spreekuur.nl
 
 The XIS must authenticate to Spreekuur.nl using the
