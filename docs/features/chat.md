@@ -55,7 +55,7 @@ sequenceDiagram
 
 ## Authorization model
 The authorization model for the chat functionality is based on a system trust relation. Authentication for this functionality
-is not based on OAuth Token Exchange but OAuth Client Credentials Grant. This means that the BSN of th patient is not
+is not based on OAuth Token Exchange but OAuth Client Credentials Grant. This means that the BSN of the patient is not
 included in the JWT token, but provided in the FHIR Communication resource.
 
 #### XIS to Spreekuur.nl
