@@ -7,7 +7,7 @@ info:
 paths:
   /Communication:
     post:
-      summary: Send message from Spreekuur.nl to XIS.
+      summary: Send message from Spreekuur.nl to XIS
       operationId: createCommunicationAtXIS
       requestBody:
         required: true

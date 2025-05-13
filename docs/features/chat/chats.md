@@ -17,7 +17,10 @@ can be started by the practitioner directly or by the patient by creating an e-c
 ## Technical summary
 Spreekuur.nl uses a chat service to facility the chat functionality. The Spreekuur.nl user interacts directly with this 
 chat service via the Spreekuur.nl frontend. Spreekuur.nl receives message events from the chat service and translates
-these events to a [FHIR Communication resource](../chat/api.mdx#operation/createCommunicationAtXIS).
+these events to a [FHIR Communication resource](../chat/api-xis#operation/createCommunicationAtXIS).
+
+The XIS can also send messages to Spreekuur.nl via the chat service. The XIS sends a FHIR Communication resource. See 
+[Communication resource](../chat/api-spreekuur#operation/createCommunicationAtSpreekuur) for more information.
 
 ⚠️The translation to FHIR Communication is done by the Spreekuur.nl backend in an asynchronous way. This means that the 
 Spreekuur.nl user doesn't have to wait for the message to be delivered at the XIS. A retry mechanism is in place to ensure 
@@ -73,7 +76,7 @@ the given `Communication.encounter.identifier` as id and `Communication.topic.te
 `Communication.payload` with type "StringType" is added as the first message to the new channel.
 
 ## Close channel by XIS
-To close a channel, the XIS can send a [Encounter](../appointment/api.mdx#tag/Encounter) with `Encounter.status` set to
+To close a channel, the XIS can send a [Encounter](../chat/api-spreekuur#operation/closeChat) with `Encounter.status` set to
 "finished". Spreekuur.nl will close the channel and prevents the Spreekuur.nl user to send new messages to the channel.
 
 ### Grace period
