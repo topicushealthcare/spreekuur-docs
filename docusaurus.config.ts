@@ -65,8 +65,13 @@ const config: Config = {
             route: '/openapi/',
           },
           {
-            spec: 'openapi/xis.yaml',
-            id: 'xis',
+            spec: 'openapi/appointment-xis.yaml',
+            id: 'appointment-xis',
+            route: '/openapi/',
+          },
+          {
+            spec: 'openapi/chat-xis.yaml',
+            id: 'chat-xis',
             route: '/openapi/',
           },
         ],

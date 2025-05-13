@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: FHIR API
   version: 1.0.0
-  description: API which Spreekuur.nl needs to communicate with the XIS.
+  description: Appointment API which Spreekuur.nl needs to communicate with the XIS.
 
 paths:
   /ValueSet/BookableAppointmentTypes:
