@@ -57,27 +57,27 @@ const config: Config = {
           {
             spec: 'https://api-samen.test.spreekuur.nl/fhir/r4/api-docs',
             id: 'samen',
-            route: '/openapi/',
+            route: '/openapi/samen',
           },
           {
             spec: 'https://webhook-gateway.test.spreekuur.nl/fhir/r4/api-docs',
             id: 'gateway',
-            route: '/openapi/',
+            route: '/openapi/webhook-gateway',
           },
           {
             spec: 'openapi/xis/appointment-xis.yaml',
             id: 'appointment-xis',
-            route: '/openapi/',
+            route: '/openapi/appointment-xis',
           },
           {
             spec: 'openapi/xis/chat-xis.yaml',
             id: 'chat-xis',
-            route: '/openapi/',
+            route: '/openapi/chat-xis',
           },
           {
             spec: 'openapi/spreekuur/chat-spreekuur.yaml',
             id: 'chat-spreekuur',
-            route: '/openapi/',
+            route: '/openapi/chat-spreekuur',
           },
         ],
         // Theme Options for modifying how redoc renders them

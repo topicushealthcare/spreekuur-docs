@@ -10,6 +10,10 @@ sidebar_position: 2
 | Acceptance  | ✅ Available  |
 | Production  | ✅ Available  |
 
+**API specifications:**
+* [API Spreekuur.nl](/openapi/chat-spreekuur)
+* [API XIS](/openapi/chat-xis)
+
 ## Functional summary
 With the chat functionality, Spreekuur.nl offers a way for practitioners to communicate with patients via chat. This chat
 can be started by the practitioner directly or by the patient by creating an e-consult.
