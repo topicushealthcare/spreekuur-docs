@@ -1,41 +1,26 @@
-# Website
+# Spreekuur.nl docs
+
+This repository contains the documentation for the Spreekuur.nl external (FHIR) API. The documentation is intended for
+developers who want to integrate with the Spreekuur.nl platform. 
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
 ### Installation
 
 ```
-$ yarn
+npm install
 ```
 
 ### Local Development
 
 ```
-$ yarn start
+npm run start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
 ### Deployment
 
-Using SSH:
+Deployment is done using GitHub Actions and GitHub Pages. See `.github/workflows/build.yml` for the deployment configuration.
 
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Every merge to master is deployed directly to GitHub pages.
