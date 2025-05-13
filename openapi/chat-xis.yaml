@@ -18,12 +18,13 @@ paths:
       responses:
         '201':
           description: Communication created
+  /Communication/{communicationId}:
     patch:
       summary: Mark message as read.
       operationId: markCommunicationAsReadAtXIS
       parameters:
         - in: path
-          name: Communication id
+          name: communicationId
           schema:
             type: string
           description: The id of the Communication resource which should be marked as read.
