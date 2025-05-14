@@ -18,7 +18,7 @@ sidebar_position: 1
 ## Functional summary
 A patient can make an appointment with a practitioner or practice via the Spreekuur.nl platform. The patient selects a
 appointment type, optionally a practitioner, a timeslot and provides a reason for the appointment. The appointment is then
-send to the XIS. It is possible to include a approval workflow in the appointment process where te practitioner has to 
+sent to the XIS. It is possible to include a approval workflow in the appointment process where the practitioner has to 
 approve or reject the appointment before it is confirmed. Once the appointment is confirmed, the patient will receive a 
 confirmation message via the Spreekuur.nl platform. 
 
