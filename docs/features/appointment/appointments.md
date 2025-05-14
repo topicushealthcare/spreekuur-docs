@@ -1,3 +1,6 @@
+---
+sidebar_position: 1
+---
 # Appointments
 
 **Availability:**
@@ -7,6 +10,10 @@
 | Test        | ✅ Available  |
 | Acceptance  | ✅ Available  |
 | Production  | ✅ Available  |
+
+**API specifications:**
+* [API Spreekuur.nl](/openapi/chat-spreekuur)
+* [API XIS](/openapi/chat-xis)
 
 ## Functional summary
 A patient can make an appointment with a practitioner or practice via the Spreekuur.nl platform. The patient selects a
@@ -48,16 +55,16 @@ sequenceDiagram
     end
 ```
 1. The `BookableAppointmentTypes` ValueSet is a list of appointment types that are bookable via Spreekuur.nl. For example:
-   `Physical appointment` or `Video-consult`. See [BookableAppointmentType](../api/api.mdx#operation/getBookableAppointmentTypes) 
+   `Physical appointment` or `Video-consult`. See [BookableAppointmentType](api-xis.mdx#operation/getBookableAppointmentTypes) 
     for more information.
 2. The `PractitionerRole` resource is used to get the available practitioners for the selected appointment type. To only
    show practitioners with an available schedule, schedules for the practitioner are fetched. See 
-   [PractitionerRole](../api/api.mdx#operation/getPractitionerRoles) and [Schedule](../api/api.mdx#operation/getSchedules) for the expected 
+   [PractitionerRole](api-xis.mdx#operation/getPractitionerRoles) and [Schedule](api-xis.mdx#operation/getSchedules) for the expected 
    responses.
 3. The `Slot` resource is used to get the available timeslots for the selected appointment type and practitioner. The 
    selected appointment type (service category), practitioner role ids and period (schedule date) are send as filters. 
-   Slots are paginated with a pages size of 7 days. See [Slot](../api/api.mdx#operation/getSlots).
-4. The `Appointment` resource is used to create the appointment. See [Appointment](../api/api.mdx#operation/createAppointment) for 
+   Slots are paginated with a pages size of 7 days. See [Slot](api-xis.mdx#operation/getSlots).
+4. The `Appointment` resource is used to create the appointment. See [Appointment](api-xis.mdx#operation/createAppointment) for 
    the supported and required properties.
 5. The `AppointmentResponse` resource is used to approve or reject the appointment.
 
@@ -79,5 +86,5 @@ sequenceDiagram
     end
 ```
 1. The `Appointment` resource is used to check if the appointment is cancellable. See 
-   [Appointment](../api/api.mdx#operation/searchAppointments) for the expected response.
-2. The `AppointmentResponse` resource is used to cancel the appointment. See [AppointmentResponse](../api/api.mdx#operation/createAppointmentResponse).
+   [Appointment](api-xis.mdx#operation/searchAppointments) for the expected response.
+2. The `AppointmentResponse` resource is used to cancel the appointment. See [AppointmentResponse](api-xis.mdx#operation/createAppointmentResponse).

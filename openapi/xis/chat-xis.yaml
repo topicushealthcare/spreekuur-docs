@@ -1,0 +1,186 @@
+openapi: 3.0.3
+info:
+  title: FHIR API
+  version: 1.0.0
+  description: Chat API which Spreekuur.nl needs to communicate with the XIS.
+
+paths:
+  /Communication:
+    post:
+      summary: Send message from Spreekuur.nl to XIS
+      operationId: createCommunicationAtXIS
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/Communication'
+      responses:
+        '201':
+          description: Communication created
+  /Communication/{communicationId}:
+    patch:
+      summary: Mark message as read.
+      operationId: markCommunicationAsReadAtXIS
+      parameters:
+        - in: path
+          name: communicationId
+          schema:
+            type: string
+          description: The id of the Communication resource which should be marked as read.
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/CommunicationConditionalPatch'
+      responses:
+        '200':
+          description: Communication patched
+
+components:
+  schemas:
+    Communication:
+      type: object
+      required: [ resourceType, id, identifier, status, payload, encounter, recipient, sender, subject, category ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Communication ]
+          example: Communication
+        id:
+          type: string
+          example: 1234567890
+        identifier:
+          type: array
+          items:
+            type: object
+            properties:
+              system:
+                type: string
+                example: "nl.spreekuur.communication-id"
+              value:
+                type: string
+                example: 1234567890
+        status:
+          type: string
+          enum: [ completed ]
+          example: completed
+        payload:
+          type: array
+          items:
+              type: object
+              properties:
+                contentString:
+                  type: string
+                  example: "Dit is een testbericht van Spreekuur.nl naar het XIS."
+                contentAttachment:
+                  type: object
+                  properties:
+                    contentType:
+                      type: string
+                      example: "jpeg"
+                    url:
+                      type: string
+                      example: "http://test.local/test.jpg"
+                    title:
+                      type: string
+                      example: "Test afbeelding"
+        encounter:
+          type: object
+          properties:
+            identifier:
+              type: array
+              items:
+                type: object
+                properties:
+                  system:
+                    type: string
+                    example: "nl.example-xis.encounter-id"
+                  value:
+                    type: string
+                    example: 1234567890
+        recipient:
+          type: array
+          items:
+              type: object
+              properties:
+                identifier:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      system:
+                        type: string
+                        example: "http://fhir.nl/fhir/NamingSystem/agb-z"
+                      value:
+                        type: string
+                        example: 12345678
+        sender:
+          type: array
+          items:
+            type: object
+            properties:
+              identifier:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      type: string
+                      example: "http://fhir.nl/fhir/NamingSystem/bsn"
+                    value:
+                      type: string
+                      example: 123456789
+        subject:
+          type: array
+          items:
+            type: object
+            properties:
+              identifier:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                        type: string
+                        example: "http://fhir.nl/fhir/NamingSystem/bsn"
+                    value:
+                        type: string
+                        example: 123456789
+        category:
+          type: array
+          items:
+            type: object
+            properties:
+              coding:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      type: string
+                      example: "nl.spreekuur.communication-type"
+                    code:
+                      type: string
+                      example: "chat"
+    CommunicationConditionalPatch:
+      type: object
+      required: [ op, path, value ]
+      properties:
+        op:
+          type: string
+          enum: [ add ]
+          example: add
+        path:
+          type: string
+          example: "/recipient/0/extension"
+        value:
+          type: object
+          properties:
+            url:
+              type: string
+              example: "nl.spreekuur.nl.ResourceSeenAt"
+            valueDateTime:
+              type: string
+              example: "2024-09-09T16:35:47"

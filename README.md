@@ -3,7 +3,7 @@
 This repository contains the documentation for the Spreekuur.nl external (FHIR) API. The documentation is intended for
 developers who want to integrate with the Spreekuur.nl platform. 
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+See https://docs.spreekuur.nl for the live documentation.
 
 ### Installation
 
