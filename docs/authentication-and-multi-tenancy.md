@@ -37,7 +37,7 @@ sequenceDiagram
     participant Authorization Server
     Spreekuur.nl->>Authorization Server: Request access token
     Authorization Server-->> Spreekuur.nl: Return access token
-    Spreekuur.nl->> XIS: Use access token to access Spreekuur.nl API
+    Spreekuur.nl->> XIS: Use access token to access XIS API
 ```
 
 ### Authentication from XIS to Spreekuur.nl
