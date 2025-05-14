@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: Spreekuur.nl appointment FHIR API
+  version: 1.0.0
+
+paths:
+  /AppointmentResponse:
+    post:
+      summary: Accept or reject an appointment with an Appointment Response
+      operationId: createAppointmentResponse
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/AppointmentResponse'
+      responses:
+        '201':
+          description: Appointment response created
+components:
+  schemas:
+    AppointmentResponse:
+      type: object
+      required: [ actor, comment, appointment, participantStatus ]
+      properties:
+        actor:
+          type: object
+          required: [ reference ]
+          properties:
+            reference:
+              type: object
+              required: [ identifier ]
+              properties:
+                identifier:
+                  type: array
+                  items:
+                    type: object
+                    required: [ system, value ]
+                    properties:
+                      system:
+                        type: string
+                        example: "http://fhir.nl/fhir/NamingSystem/bsn"
+                      value:
+                        type: string
+                        example: "123456789"
+        comment:
+          type: string
+          example: "Your appointment is accepted"
+        appointment:
+          required: [ reference ]
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "Appointment/123"
+        participantStatus:
+          type: string
+          enum: [ declined, accepted ]
+          example: accepted

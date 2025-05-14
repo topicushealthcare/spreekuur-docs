@@ -12,7 +12,7 @@ sidebar_position: 1
 | Production  | ✅ Available  |
 
 **API specifications:**
-* [API Spreekuur.nl](/openapi/chat-spreekuur)
+* [API Spreekuur.nl](/openapi/appointment-spreekuur)
 * [API XIS](/openapi/chat-xis)
 
 ## Functional summary
@@ -87,4 +87,4 @@ sequenceDiagram
 ```
 1. The `Appointment` resource is used to check if the appointment is cancellable. See 
    [Appointment](api-xis.mdx#operation/searchAppointments) for the expected response.
-2. The `AppointmentResponse` resource is used to cancel the appointment. See [AppointmentResponse](api-xis.mdx#operation/createAppointmentResponse).
+2. The `AppointmentResponse` resource is used to cancel the appointment. See [AppointmentResponse](api-spreekuur.mdx#operation/createAppointmentResponse).
