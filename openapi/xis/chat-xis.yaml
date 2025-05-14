@@ -20,6 +20,7 @@ paths:
   /Communication/{communicationId}:
     patch:
       summary: Mark message as read.
+      description: This endpoint uses the "conditional patch" operation. See https://build.fhir.org/http.html#cond-patch for more information.
       operationId: markCommunicationAsReadAtXIS
       parameters:
         - in: path

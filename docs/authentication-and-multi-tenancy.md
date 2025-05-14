@@ -4,6 +4,8 @@ sidebar_position: 2
 # Authentication and multi tenancy
 
 ## Authentication
+All authentication between Spreekuur.nl and the XIS is done using OAuth 2.0 specification.
+
 ### Authentication from Spreekuur.nl to XIS
 Almost all authentication (with some exceptions) from Spreekuur.nl to the XIS is done using 
 [OAuth Token Exchange](https://datatracker.ietf.org/doc/html/rfc8693). 
