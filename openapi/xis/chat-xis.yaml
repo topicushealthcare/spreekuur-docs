@@ -1,8 +1,7 @@
 openapi: 3.0.3
 info:
-  title: FHIR API
+  title: XIS chat FHIR API
   version: 1.0.0
-  description: Chat API which Spreekuur.nl needs to communicate with the XIS.
 
 paths:
   /Communication:
@@ -21,6 +20,7 @@ paths:
   /Communication/{communicationId}:
     patch:
       summary: Mark message as read.
+      description: This endpoint uses the "conditional patch" operation. See https://build.fhir.org/http.html#cond-patch for more information.
       operationId: markCommunicationAsReadAtXIS
       parameters:
         - in: path

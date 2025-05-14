@@ -40,8 +40,11 @@ const config: Config = {
       'classic',
       {
         docs: {
+          routeBasePath: '/',
           sidebarPath: './sidebars.ts',
         },
+        blog: false,
+        pages: false,
         theme: {
           customCss: './src/css/custom.css',
         },
@@ -68,6 +71,11 @@ const config: Config = {
             spec: 'openapi/xis/appointment-xis.yaml',
             id: 'appointment-xis',
             route: '/openapi/appointment-xis',
+          },
+          {
+            spec: 'openapi/spreekuur/appointment-spreekuur.yaml',
+            id: 'appointment-spreekuur',
+            route: '/openapi/appointment-spreekuur',
           },
           {
             spec: 'openapi/xis/chat-xis.yaml',
