@@ -62,6 +62,12 @@ components:
               value:
                 type: string
                 example: 1234567890
+        topic:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Example topic"
         status:
           type: string
           enum: [ completed ]

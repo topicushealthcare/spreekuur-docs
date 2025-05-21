@@ -58,16 +58,6 @@ const config: Config = {
         specs: [
           // You can also pass it a OpenAPI spec URL
           {
-            spec: 'https://api-samen.test.spreekuur.nl/fhir/r4/api-docs',
-            id: 'samen',
-            route: '/openapi/samen',
-          },
-          {
-            spec: 'https://webhook-gateway.test.spreekuur.nl/fhir/r4/api-docs',
-            id: 'gateway',
-            route: '/openapi/webhook-gateway',
-          },
-          {
             spec: 'openapi/xis/appointment-xis.yaml',
             id: 'appointment-xis',
             route: '/openapi/appointment-xis',

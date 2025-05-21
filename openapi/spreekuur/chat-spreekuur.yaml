@@ -54,6 +54,12 @@ components:
               value:
                 type: string
                 example: 1234567890
+        topic:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Example topic"
         status:
           type: string
           enum: [ completed ]
@@ -65,7 +71,7 @@ components:
               properties:
                 contentString:
                   type: string
-                  example: "Dit is een testbericht van Spreekuur.nl naar het XIS."
+                  example: "Example message from XIS to Spreekuur.nl."
                 contentAttachment:
                   type: object
                   properties:
