@@ -16,8 +16,7 @@ env:
 jobs:
   build:
     name: 🏗️ Build
-    # Run on static IP to avoid issues with Cloudflare IP blocking. This is needed because Docusaurus resolves the openapi spec url in the build process.
-    runs-on: ubuntu-latest-static-ip
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: 🌳Checkout branch
