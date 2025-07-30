@@ -71,7 +71,7 @@ jobs:
         id: get-commit-message
         run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> "$GITHUB_OUTPUT"
       - name: 📟 Report to Slack
-        uses: slackapi/slack-github-action@v2.1.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_GHA_DEFAULT_WEBHOOK_URL }}
           webhook-type: incoming-webhook
