@@ -1,0 +1,283 @@
+openapi: 3.0.3
+info:
+  title: XIS MedicationRequest FHIR API
+  version: 1.0.0
+
+paths:
+  /MedicationRequestBundle:
+    get:
+      summary: Search for available medications the patient can order.
+      operationId: getMedicationRequests
+      responses:
+        '200':
+          description: A list of MedicationRequests
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/MedicationRequestBundle'
+  /MedicationRequest:
+    get:
+      summary: Get a specific MedicationRequest by ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "example-medication-request-id-1"
+      operationId: getMedicationRequest
+      responses:
+        '200':
+          description: A single MedicationRequest
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/MedicationRequest'
+    post:
+      summary: Order a medication
+      operationId: createMedicationRequest
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/NewMedicationRequest'
+      responses:
+        '201':
+          description: MedicationRequest created
+
+components:
+  schemas:
+    MedicationRequestBundle:
+      type: object
+      required: [ resourceType, type ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Bundle ]
+          example: Bundle
+        meta:
+          type: object
+          properties:
+            versionId:
+              type: string
+              example: "4037143"
+        type:
+          type: string
+          enum: [ searchset ]
+          example: searchset
+        total:
+          type: integer
+          example: 1
+        entry:
+          type: array
+          items:
+            type: object
+            required: [ resource ]
+            properties:
+              resource:
+                $ref: '#/components/schemas/MedicationRequest'
+    MedicationRequest:
+      type: object
+      required: [ resourceType, id, extension, status, medicationReference, intent, subject, performer, dispenseRequest ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ MedicationRequest ]
+          example: MedicationRequest
+        id:
+          type: string
+          example: "example-medication-request-id-1"
+        extension:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                example: "http://nictiz.nl/fhir/StructureDefinition/zib-Medication-PeriodOfUse"
+              valuePeriod:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    format: date
+                    example: "2022-11-08"
+                  end:
+                    type: string
+                    format: date
+                    example: "2042-05-07"
+        status:
+          type: string
+          enum: [ active, on-hold, cancelled, completed, entered-in-error, stopped, draft, unknown ]
+          example: active
+        medicationReference:
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "Medication/example-medication-id-1"
+            display:
+              description: This name is used to display the medication in Spreekuur.nl. It should be recognizable by the patient.
+              type: string
+              example: "IBUPROFEN TEVA TABLET 400MG"
+        subject:
+          type: object
+          required: [ reference ]
+          properties:
+            reference:
+              type: string
+              example: "Patient/example-patient-id-1"
+        performer:
+          type: object
+          description: This is the pharmacy where the pation can collect the medication.
+          properties:
+            reference:
+              type: string
+              example: "Organization/example-pharmacy-organization-id-1"
+        dispenseRequest:
+          description: The dispenseRequest contains information about the quantity and form of the medication that is requested.
+          type: object
+          properties:
+            quantity:
+              type: object
+              properties:
+                value:
+                  type: number
+                  example: 1
+                unit:
+                  type: string
+                  example: "stuk"
+                system:
+                  type: string
+                  example: "http://unitsofmeasure.org"
+                code:
+                  type: string
+                  example: "stuk"
+            initialFill:
+              type: object
+              properties:
+                quantity:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                      example: 5
+                    unit:
+                      type: string
+                      example: "STUK"
+                    system:
+                      type: string
+                      example: "urn:oid:2.16.840.1.113883.2.4.4.1.900.2"
+                    code:
+                      type: string
+                      example: "245"
+    NewMedicationRequest:
+      description: This is a copy of the MedicationRequest, but with the 'id' field removed, authoredOn set to now, basedOn filled with a reference to the original MedicationRequest, status set to "draft" and optionally an added note of the patient.
+      type: object
+      required: [ resourceType, extension, status, intent, medicationReference, subject, performer, dispenseRequest, authoredOn, basedOn ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ MedicationRequest ]
+          example: MedicationRequest
+        extension:
+          type: array
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                example: "http://nictiz.nl/fhir/StructureDefinition/zib-Medication-PeriodOfUse"
+              valuePeriod:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    format: date
+                    example: "2022-11-08"
+                  end:
+                    type: string
+                    format: date
+                    example: "2042-05-07"
+        status:
+          type: string
+          description: The status is always set to "draft" when Spreekuur.nl is creating a new MedicationRequest.
+          enum: [ draft ]
+          example: active
+        medicationReference:
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "Medication/example-medication-id-1"
+            display:
+              description: This name is used to display the medication in Spreekuur.nl. It should be recognizable by the patient.
+              type: string
+              example: "IBUPROFEN TEVA TABLET 400MG"
+        subject:
+          type: object
+          required: [ reference ]
+          properties:
+            reference:
+              type: string
+              example: "Patient/example-patient-id-1"
+        performer:
+          type: object
+          description: This is the pharmacy where the pation can collect the medication.
+          properties:
+            reference:
+              type: string
+              example: "Organization/example-pharmacy-organization-id-1"
+        dispenseRequest:
+          type: object
+          properties:
+            quantity:
+              type: object
+              properties:
+                value:
+                  type: number
+                  example: 1
+                unit:
+                  type: string
+                  example: "stuk"
+                system:
+                  type: string
+                  example: "http://unitsofmeasure.org"
+                code:
+                  type: string
+                  example: "stuk"
+            initialFill:
+              type: object
+              properties:
+                quantity:
+                  type: object
+                  properties:
+                    value:
+                      type: number
+                      example: 5
+                    unit:
+                      type: string
+                      example: "STUK"
+                    system:
+                      type: string
+                      example: "urn:oid:2.16.840.1.113883.2.4.4.1.900.2"
+                    code:
+                      type: string
+                      example: "245"
+        authoredOn:
+          type: string
+          format: date-time
+          description: The date and time when the new MedicationRequest was created. This is set to the current time when the request is made.
+          example: "2025-08-08T12:00:00+02:00"
+        note:
+          type: string
+          description: Optional note from the patient regarding the medication request.
+          example: "I want a dubble dose of this medication because I'm traveling."
+        basedOn:
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "MedicationRequest/example-medication-request-id-1"
+          description: A reference to the original MedicationRequest that this new request is based on.

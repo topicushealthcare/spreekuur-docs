@@ -77,6 +77,16 @@ const config: Config = {
             id: 'chat-spreekuur',
             route: '/openapi/chat-spreekuur',
           },
+          {
+            spec: 'openapi/xis/medication-xis.yaml',
+            id: 'medication-xis',
+            route: '/openapi/medication-xis',
+          },
+          {
+            spec: 'openapi/spreekuur/medication-spreekuur.yaml',
+            id: 'medication-spreekuur',
+            route: '/openapi/medication-spreekuur',
+          },
         ],
         // Theme Options for modifying how redoc renders them
         theme: {

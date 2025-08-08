@@ -18,7 +18,7 @@ paths:
         '201':
           description: Communication created
   /Encounter:
-    patch:
+    put:
       summary: Close a chat
       operationId: closeChat
       requestBody:

@@ -1,0 +1,55 @@
+openapi: 3.0.3
+info:
+  title: Spreekuur.nl MedicationRequest FHIR API
+  version: 1.0.0
+
+paths:
+  /MedicationRequest:
+    put:
+      summary: Endpoint to receive MedicationRequest status updates
+      operationId: updateMedicationRequest
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/MedicationRequest'
+      responses:
+        '201':
+          description: MedicationRequest created
+
+components:
+  schemas:
+    MedicationRequest:
+      type: object
+      required: [ resourceType, id, status, medicationReference, intent, subject ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ MedicationRequest ]
+          example: MedicationRequest
+        id:
+          type: string
+          example: "example-medication-request-id-1"
+        status:
+          type: string
+          description: Only 'active' and 'cancelled' statuses are supported by Spreekuur.nl. The status is set to 'active' when the MedicationRequest order is approved, and can be set to 'cancelled' when the order is rejected.
+          enum: [ active, cancelled ]
+          example: active
+        medicationReference:
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "Medication/example-medication-id-1"
+            display:
+              description: This name is used to display the medication in Spreekuur.nl. It should be recognizable by the patient.
+              type: string
+              example: "IBUPROFEN TEVA TABLET 400MG"
+        subject:
+          type: object
+          required: [ reference ]
+          properties:
+            reference:
+              type: string
+              example: "Patient/example-patient-id-1"

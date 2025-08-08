@@ -99,7 +99,7 @@ Communication resource. The XIS should download the attachment from the CDN and 
 A XIS can also send attachments in the same way to Spreekuur.nl. 
 
 ## Read notifications
-Spreekuur.nl supports read notifications. This is done by sending a patch on the Communication resource with a FHIR 
+Spreekuur.nl supports read notifications. This is done by sending a put on the Communication resource with a FHIR 
 extension.
 
 Read notifications from XIS to Spreekuur.nl are not supported.
