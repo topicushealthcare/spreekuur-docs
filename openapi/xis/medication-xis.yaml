@@ -224,7 +224,7 @@ components:
               example: "Patient/example-patient-id-1"
         performer:
           type: object
-          description: This is the pharmacy where the pation can collect the medication.
+          description: This is the pharmacy where the patient can collect the medication.
           properties:
             reference:
               type: string
