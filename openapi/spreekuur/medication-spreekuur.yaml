@@ -15,8 +15,8 @@ paths:
             schema:
               $ref: '#/components/schemas/MedicationRequest'
       responses:
-        '201':
-          description: MedicationRequest created
+        '200':
+          description: MedicationRequest update accepted
 
 components:
   schemas:
