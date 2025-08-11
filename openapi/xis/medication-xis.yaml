@@ -204,7 +204,7 @@ components:
           type: string
           description: The status is always set to "draft" when Spreekuur.nl is creating a new MedicationRequest.
           enum: [ draft ]
-          example: active
+          example: draft
         medicationReference:
           type: object
           properties:
