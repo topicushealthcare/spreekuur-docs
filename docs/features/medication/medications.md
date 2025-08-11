@@ -61,5 +61,5 @@ sequenceDiagram
 4. The practitioner is notified of the new medication order and can approve or reject the order. 
    1. When the order is approved, the patient receives a notification from Spreekuur.nl the order can be collected at
       the pharmacy.
-   2. When the order is rejected, the patient receives a notification form Spreekuur.nl. Optionaly, the practitioner can 
+   2. When the order is rejected, the patient receives a notification from Spreekuur.nl. Optionally, the practitioner can 
       add a message which will be added to the notification.
