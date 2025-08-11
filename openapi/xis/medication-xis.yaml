@@ -15,7 +15,7 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/MedicationRequestBundle'
-  /MedicationRequest:
+  /MedicationRequest/{id}:
     get:
       summary: Get a specific MedicationRequest by ID.
       parameters:
@@ -172,6 +172,10 @@ components:
                     code:
                       type: string
                       example: "245"
+        intent:
+          type: string
+          enum: [ order, plan ]
+          example: order
     NewMedicationRequest:
       description: This is a copy of the MedicationRequest, but with the 'id' field removed, authoredOn set to now, basedOn filled with a reference to the original MedicationRequest, status set to "draft" and optionally an added note of the patient.
       type: object
@@ -281,3 +285,8 @@ components:
               type: string
               example: "MedicationRequest/example-medication-request-id-1"
           description: A reference to the original MedicationRequest that this new request is based on.
+        intent:
+          type: string
+          enum: [ order ]
+          description: The intent of the MedicationRequest. For new requests, this is always set to "order".
+          example: order
