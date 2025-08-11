@@ -2,7 +2,7 @@
 sidebar_position: 3
 ---
 # Order medication 
-**Availabillity:**
+**Availability:**
 
 | Environment | status       |
 |-------------|--------------|
