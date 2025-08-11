@@ -44,7 +44,7 @@ sequenceDiagram
     end
     XIS->>Practitioner: Notify practitioner of new medication order
     Practitioner->>XIS: Approve or reject new medication order
-    XIS->>Spreekuur.nl: (4) PATCH /MedicationRequest
+    XIS->>Spreekuur.nl: (4) PUT /MedicationRequest
     Spreekuur.nl->>Patient (User): Notify Patient of medication order approval or deny 
 ```
 1. The patient requests a list of orderable medications. This XIS is responsible to only return medications which can be
