@@ -273,7 +273,7 @@ components:
         note:
           type: string
           description: Optional note from the patient regarding the medication request.
-          example: "I want a dubble dose of this medication because I'm traveling."
+          example: "I want a double dose of this medication because I'm traveling."
         basedOn:
           type: object
           properties:
