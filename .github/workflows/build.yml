@@ -20,7 +20,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: 🌳Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: 📥 Cache node_modules
         uses: actions/cache@v4
         id: cache-modules
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 🌳 Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: 📩 Get commit message
         id: get-commit-message
         run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> "$GITHUB_OUTPUT"
