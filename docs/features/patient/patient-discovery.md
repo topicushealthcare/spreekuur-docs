@@ -28,7 +28,7 @@ sequenceDiagram
     actor Practitioner
 
     Practitioner->>XIS: (1) Open patient record
-    XIS->>Spreekuur.nl: (2) GET /Patient?identifier=http//fhir.nl/fhir/NamingSystem/bsn|{patient.bsn}
+    XIS->>Spreekuur.nl: (2) GET /Patient?identifier=http://fhir.nl/fhir/NamingSystem/bsn|{patient.bsn}
     alt if patient is registered
         Spreekuur.nl-->>XIS: (2.1) Patient
     else if patient is not registered
