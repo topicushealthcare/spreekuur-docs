@@ -80,7 +80,7 @@ sequenceDiagram
     Spreekuur.nl->>XIS: GET /Organization?identifier=http://fhir.nl/fhir/NamingSystem/agb-z|{pharmacy-agb-1}
     Spreekuur.nl-->>Patient (User): Show medication order overview
 ```
-1. The patient requests the medication order overview. Spreekuur.nl will show alle medication orders which are known in
+1. The patient requests the medication order overview. Spreekuur.nl will show all medication orders which are known in
     the Spreekuur.nl database.
 2. When the patient opens the detail of a medication order, Spreekuur.nl will request the pharmacy organization from
     the XIS to show the name and address of the pharmacy where the medication can be collected. The pharmacy organization
