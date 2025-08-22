@@ -1,2 +1,0 @@
-# Patient discovery
-WIP
