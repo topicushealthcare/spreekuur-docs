@@ -83,5 +83,5 @@ sequenceDiagram
 1. The patient requests the medication order overview. Spreekuur.nl will show alle medication orders which are known in
     the Spreekuur.nl database.
 2. When the patient opens the detail of a medication order, Spreekuur.nl will request the pharmacy organization from
-    the XIS to show the name and address of the pharmacy where the medication can be collected. The pharamcy organization
+    the XIS to show the name and address of the pharmacy where the medication can be collected. The pharmacy organization
     is requested at the XIS so the name and address are always up to date.
