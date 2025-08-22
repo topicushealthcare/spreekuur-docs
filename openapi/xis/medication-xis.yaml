@@ -62,7 +62,7 @@ paths:
           content:
             application/fhir+json:
               schema:
-                $ref: '#/components/schemas/OrginizationBundle'
+                $ref: '#/components/schemas/OrganizationBundle'
 components:
   schemas:
     MedicationRequestBundle:
@@ -307,7 +307,7 @@ components:
           enum: [ order ]
           description: The intent of the MedicationRequest. For new requests, this is always set to "order".
           example: order
-    OrginizationBundle:
+    OrganizationBundle:
       type: object
       required: [ resourceType, type ]
       properties:
