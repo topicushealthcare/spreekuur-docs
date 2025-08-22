@@ -8,12 +8,14 @@ paths:
     get:
       summary: Discover if a patient has a Spreekuur.nl account.
       operationId: findPatient
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              $ref: '#/components/schemas/Patient'
+      parameters:
+        - name: identifier
+          in: query
+          description: The patient's BSN number.
+          required: true
+          schema:
+              type: string
+              example: http://fhir.nl/fhir/NamingSystem/bsn|123456782
       responses:
         '200':
           description: A bundle which contains a single Patient resource if the patient is registered at the organization.
