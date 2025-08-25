@@ -60,7 +60,7 @@ sequenceDiagram
 ```
 1. The practitioner invites a patient in the XIS.
 2. The XIS sends a POST request to Spreekuur.nl to invite the patient with a BSN and email.
-    1. If the patient is not registered, Spreekuur.nl sends an email to the patient with a deeplink to the login page of 
+    1. If the patient is not registered, Spreekuur.nl sends an email to the patient with a link to the login page of 
         Spreekuur.nl with the inviting organisation pre-selected.
     2. If the patient is already registered, Spreekuur.nl returns a 422 Conflict response.
 
