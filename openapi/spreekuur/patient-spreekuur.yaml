@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Spreekuur.nl Patient FHIR API
+  version: 1.0.0
+
+paths:
+  /Patient:
+    get:
+      summary: Discover if a patient has a Spreekuur.nl account.
+      operationId: findPatient
+      parameters:
+        - name: identifier
+          in: query
+          description: The patient's BSN number.
+          required: true
+          schema:
+              type: string
+              example: http://fhir.nl/fhir/NamingSystem/bsn|123456782
+      responses:
+        '200':
+          description: A bundle which contains a single Patient resource if the patient is registered at the organization.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/PatientBundle'
+    post:
+      summary: Send invitation mail to a Patient to start using Spreekuur.nl
+      operationId: invitePatient
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/PatientInvite'
+      responses:
+        '201':
+          description: Patient invited
+
+components:
+  schemas:
+    PatientBundle:
+      type: object
+      required: [ resourceType, type ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Bundle ]
+          example: Bundle
+        meta:
+          type: object
+          properties:
+            versionId:
+              type: string
+              example: "4037143"
+        type:
+          type: string
+          enum: [ searchset ]
+          example: searchset
+        total:
+          type: integer
+          example: 1
+        entry:
+          type: array
+          items:
+            type: object
+            required: [ resource ]
+            properties:
+              resource:
+                $ref: '#/components/schemas/Patient'
+    Patient:
+      type: object
+      required: [ resourceType, id, identifier ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Patient ]
+          example: Patient
+        id:
+          type: string
+          example: 123456782
+        identifier:
+          type: array
+          items:
+            type: object
+            properties:
+              system:
+                type: string
+                example: "http://fhir.nl/fhir/NamingSystem/bsn"
+              value:
+                type: string
+                example: 123456782
+    PatientInvite:
+      type: object
+      required: [ resourceType, id, identifier, telecom ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Patient ]
+          example: Patient
+        id:
+          type: string
+          example: "example-patient-id"
+        identifier:
+          type: array
+          items:
+            type: object
+            required: [ system, value ]
+            properties:
+              system:
+                type: string
+                example: "http://fhir.nl/fhir/NamingSystem/bsn"
+              value:
+                type: string
+                example: 123456782
+        telecom:
+          type: array
+          items:
+            type: object
+            required: [ system, value ]
+            properties:
+              system:
+                type: string
+                enum: [ email ]
+                example: email
+              value:
+                type: string
+                example: "example-patient@example.local"
