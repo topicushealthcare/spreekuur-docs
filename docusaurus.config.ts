@@ -97,6 +97,11 @@ const config: Config = {
                         id: 'patient-spreekuur',
                         route: '/openapi/patient-spreekuur',
                     },
+                    {
+                        spec: 'openapi/spreekuur/notice-spreekuur.yaml',
+                        id: 'notice-spreekuur',
+                        route: '/openapi/notice-spreekuur',
+                    },
                 ],
                 // Theme Options for modifying how redoc renders them
                 theme: {
