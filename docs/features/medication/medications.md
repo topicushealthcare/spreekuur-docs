@@ -33,6 +33,8 @@ sequenceDiagram
     Patient (User)->>Spreekuur.nl: (1) Get medication list
     Spreekuur.nl->>XIS: GET /MedicationRequest
     XIS-->>Spreekuur.nl: MedicationRequest list
+    Spreekuur.nl->>XIS: GET /Organization?identifier=http://fhir.nl/fhir/NamingSystem/agb-z|{pharmacy-agb-1},http://fhir.nl/fhir/NamingSystem/agb-z|{pharmacy-agb-2}
+    XIS-->>Spreekuur.nl: Pharmacy Organization bundle
     Patient (User)->>Spreekuur.nl: (2) Select medications
     alt Add notes
         Patient (User)->>Spreekuur.nl: (2.1) Add notes to medication
@@ -48,7 +50,8 @@ sequenceDiagram
     Spreekuur.nl->>Patient (User): Notify Patient of medication order approval or deny 
 ```
 1. The patient requests a list of orderable medications. This XIS is responsible to only return medications which can be
-    ordered by the patient.
+    ordered by the patient. To give the patient an indication where the medication can be collected, Spreekuur.nl will also
+    request the pharmacy organizations from the XIS. 
 2. The patient can select one or more medications from the list.
    1. Optionally the patient can add a note to each medication in the list.
 3. After the patient confirms the order, Spreekuur.nl will send each chosen medication separately to the XIS. It will 
@@ -63,3 +66,22 @@ sequenceDiagram
       the pharmacy.
    2. When the order is rejected, the patient receives a notification from Spreekuur.nl. Optionally, the practitioner can 
       add a message which will be added to the notification.
+
+## Medication order overview
+The flow to show the medication order overview is as follows:
+```mermaid
+sequenceDiagram
+    actor Patient (User)
+    participant Spreekuur.nl
+    participant XIS
+    
+    Patient (User)->>Spreekuur.nl: (1) Get medication order overview
+    Patient (User)->>Spreekuur.nl: (2) Open detail of medication order
+    Spreekuur.nl->>XIS: GET /Organization?identifier=http://fhir.nl/fhir/NamingSystem/agb-z|{pharmacy-agb-1}
+    Spreekuur.nl-->>Patient (User): Show medication order overview
+```
+1. The patient requests the medication order overview. Spreekuur.nl will show all medication orders which are known in
+    the Spreekuur.nl database.
+2. When the patient opens the detail of a medication order, Spreekuur.nl will request the pharmacy organization from
+    the XIS to show the name and address of the pharmacy where the medication can be collected. The pharmacy organization
+    is requested at the XIS so the name and address are always up to date.
