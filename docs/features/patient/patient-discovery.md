@@ -25,20 +25,17 @@ The flow to discover a patient is as follows:
 sequenceDiagram    
     participant Spreekuur.nl
     participant XIS
-    actor Practitioner
 
-    Practitioner->>XIS: (1) Open patient record
-    XIS->>Spreekuur.nl: (2) GET /Patient?identifier=http://fhir.nl/fhir/NamingSystem/bsn|{patient.bsn}
+    XIS->>Spreekuur.nl: (1) GET /Patient?identifier=http://fhir.nl/fhir/NamingSystem/bsn|{patient.bsn}
     alt if patient is registered
-        Spreekuur.nl-->>XIS: (2.1) Patient
+        Spreekuur.nl-->>XIS: (2) Patient
     else if patient is not registered
-        Spreekuur.nl-->>XIS: (2.2) 404
+        Spreekuur.nl-->>XIS: (3) 404
     end
 ```
-1. The practitioner opens a patient record in the XIS (for example).
-2. The XIS queries Spreekuur.nl for a patient with the given BSN. 
-   1. If the patient is registered, Spreekuur.nl returns the Patient resource.
-   2. If the patient is not registered, Spreekuur.nl returns a 404 Not Found response.
+1. The XIS queries Spreekuur.nl for a patient with the given BSN. 
+2. If the patient is registered, Spreekuur.nl returns the Patient resource.
+3. If the patient is not registered, Spreekuur.nl returns a 404 Not Found response.
 
 ## XIS to Spreekuur.nl Invite Patient
 The flow to invite a patient is as follows:
