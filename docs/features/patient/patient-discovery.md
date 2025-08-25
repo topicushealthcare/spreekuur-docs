@@ -12,8 +12,8 @@ sidebar_position: 4
 
 ## Functional summary
 With the Patient Discovery API a XIS can query Spreekuur.nl if a Patient with a given BSN is already registered. It is 
-also possible to invite a patient to start using Spreekuur.nl. The patient will receive an email with a deeplink to 
-Spreekuur.nl to the login page with the inviting organisation pre-selected. 
+also possible to invite a patient to start using Spreekuur.nl. The patient will receive an email with a link to 
+the login page of Spreekuur.nl with the inviting organisation pre-selected. 
 
 The XIS must also provide an API for Spreekuur.nl to query if a patient with a given BSN is registered at a organisation
 with a given AGB. Spreekuur.nl uses this API to check if a patient is registered at the organisation before starting 
