@@ -1,0 +1,71 @@
+openapi: 3.0.3
+info:
+  title: XIS Patient FHIR API
+  version: 1.0.0
+
+paths:
+  /Patient:
+    get:
+      summary: Discover if a patient is registered at the organization.
+      operationId: findPatient
+      responses:
+        '200':
+          description: A bundle which contains a single Patient resource if the patient is registered at the organization.
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/PatientBundle'
+
+components:
+  schemas:
+    PatientBundle:
+      type: object
+      required: [ resourceType, type ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Bundle ]
+          example: Bundle
+        meta:
+          type: object
+          properties:
+            versionId:
+              type: string
+              example: "4037143"
+        type:
+          type: string
+          enum: [ searchset ]
+          example: searchset
+        total:
+          type: integer
+          example: 1
+        entry:
+          type: array
+          items:
+            type: object
+            required: [ resource ]
+            properties:
+              resource:
+                $ref: '#/components/schemas/Patient'
+    Patient:
+      type: object
+      required: [ resourceType, id, identifier ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Patient ]
+          example: Patient
+        id:
+          type: string
+          example: "example-patient-id-1"
+        identifier:
+          type: array
+          items:
+            type: object
+            properties:
+              system:
+                type: string
+                example: "http://fhir.nl/fhir/NamingSystem/bsn"
+              value:
+                type: string
+                example: 123456782
