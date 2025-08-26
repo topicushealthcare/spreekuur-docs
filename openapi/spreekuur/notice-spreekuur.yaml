@@ -45,7 +45,7 @@ components:
           example: completed
         category:
           type: array
-          description: The category will be used by Spreekuur.nl to differentiate between chat messages an notices.
+          description: The category will be used by Spreekuur.nl to differentiate between chat messages and notices.
           items:
             type: object
             properties:
