@@ -15,7 +15,7 @@ sidebar_position: 3
 
 ## Functional summary
 With the Notice feature, practitioners can send one-way messages to patients. Patients cannot respond to these messages.
-Typical uses cases are: 
+Typical use cases are: 
 * Informing patient about lab results
 * Inviting a patient for a vaccination
 * Etc.
