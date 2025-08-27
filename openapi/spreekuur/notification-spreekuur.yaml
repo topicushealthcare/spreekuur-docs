@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: Spreekuur.nl Notification FHIR API
+  version: 1.0.0
+
+paths:
+  /Communication:
+    post:
+      summary: Send a notification to a patient
+      operationId: sendNotification
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/Communication'
+      responses:
+        '201':
+          description: Notification created
+
+components:
+  schemas:
+    Communication:
+      type: object
+      required: [ resourceType, status, payload, recipient, category, topic, contained ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Communication ]
+          example: Communication
+        contained:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Patient'
+        topic:
+          type: object
+          properties:
+            text:
+              type: string
+              example: "Lab results available"
+        status:
+          type: string
+          enum: [ completed ]
+          example: completed
+        category:
+          type: array
+          description: The category will be used by Spreekuur.nl to differentiate between chat messages and notifications.
+          items:
+            type: object
+            properties:
+              coding:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    system:
+                      type: string
+                      example: "nl.spreekuur.communication-category"
+                    code:
+                      type: string
+                      example: "notification"
+        payload:
+          type: array
+          items:
+            type: object
+            properties:
+              contentString:
+                type: string
+                example: "Your lab results are available."
+        recipient:
+          type: array
+          items:
+            type: object
+            required: [ reference ]
+            properties:
+              reference:
+                description: Reference to the Patient resource contained in this Communication
+                type: string
+                example: "#9876543210"
+    Patient:
+      type: object
+      required: [ resourceType, id, identifier ]
+      properties:
+        resourceType:
+          type: string
+          enum: [ Patient ]
+          example: Patient
+        id:
+          type: string
+          example: "9876543210"
+        identifier:
+          type: array
+          items:
+            type: object
+            required: [ system, value ]
+            description: The BSN is required to identify the patient.
+            properties:
+              system:
+                type: string
+                example: "http://fhir.nl/fhir/NamingSystem/bsn"
+              value:
+                type: string
+                example: 123456782
+        telecom:
+          type: array
+          description: When a patient is not yet registered at Spreekuur.nl, an email address can be provided which will be used to send an invitation to register.
+          items:
+            type: object
+            properties:
+              system:
+                type: string
+                enum: [ email ]
+                example: email
+              value:
+                type: string
+                example: "jan.janssen@example.com"
