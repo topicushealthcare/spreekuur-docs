@@ -4,18 +4,23 @@ info:
   version: 1.0.0
 
 paths:
-  /Patient:
-    get:
+  /Patient/_search:
+    post:
       summary: Discover if a patient has a Spreekuur.nl account.
       operationId: findPatient
-      parameters:
-        - name: identifier
-          in: query
-          description: The patient's BSN number.
-          required: true
-          schema:
-              type: string
-              example: http://fhir.nl/fhir/NamingSystem/bsn|123456782
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - identifier
+              properties:
+                identifier:
+                  type: string
+                  description: The patient's BSN number in the format system|value
+                  example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
       responses:
         '200':
           description: A bundle which contains a single Patient resource if the patient is registered at the organization.
@@ -23,6 +28,7 @@ paths:
             application/fhir+json:
               schema:
                 $ref: '#/components/schemas/PatientBundle'
+  /Patient:
     post:
       summary: Send invitation mail to a Patient to start using Spreekuur.nl
       operationId: invitePatient
