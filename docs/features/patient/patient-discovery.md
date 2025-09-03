@@ -26,7 +26,7 @@ sequenceDiagram
     participant Spreekuur.nl
     participant XIS
 
-    XIS->>Spreekuur.nl: (1) GET /Patient?identifier=http://fhir.nl/fhir/NamingSystem/bsn|{patient.bsn}
+    XIS->>Spreekuur.nl: (1) POST /Patient/_search
     alt if patient is registered
         Spreekuur.nl-->>XIS: (2) Patient
     else if patient is not registered
@@ -34,6 +34,7 @@ sequenceDiagram
     end
 ```
 1. The XIS queries Spreekuur.nl for a patient with the given BSN. 
+    1. ⚠️ A [FHIR POST](https://build.fhir.org/search.html#searchinputs) based search is used to prevent the BSN from being logged in webserver logs.
 2. If the patient is registered, Spreekuur.nl returns the Patient resource.
 3. If the patient is not registered, Spreekuur.nl returns a 404 Not Found response.
 
