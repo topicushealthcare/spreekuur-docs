@@ -33,7 +33,7 @@ sequenceDiagram
     Patient (User)->>Spreekuur.nl: (1) Get medication list
     Spreekuur.nl->>XIS: GET /MedicationRequest
     XIS-->>Spreekuur.nl: MedicationRequest list
-    Spreekuur.nl->>XIS: GET /Organization?identifier=http://fhir.nl/fhir/NamingSystem/agb-z|{pharmacy-agb-1},http://fhir.nl/fhir/NamingSystem/agb-z|{pharmacy-agb-2}
+    Spreekuur.nl->>XIS: GET /Organization
     XIS-->>Spreekuur.nl: Pharmacy Organization bundle
     Patient (User)->>Spreekuur.nl: (2) Select medications
     alt Add notes
