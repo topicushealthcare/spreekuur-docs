@@ -102,6 +102,11 @@ const config: Config = {
                         id: 'notification-spreekuur',
                         route: '/openapi/notification-spreekuur',
                     },
+                    {
+                        spec: 'openapi/xis/econsult-triage-xis.yaml',
+                        id: 'econsult-triage-xis',
+                        route: '/openapi/econsult-triage-xis'
+                    },
                 ],
                 // Theme Options for modifying how redoc renders them
                 theme: {

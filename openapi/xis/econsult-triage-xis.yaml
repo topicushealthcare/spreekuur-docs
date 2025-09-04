@@ -1,0 +1,198 @@
+openapi: 3.0.3
+info:
+  title: XIS E-consult triage data FHIR API
+  version: 1.0.0
+
+paths:
+  /TriageOutcome:
+    post:
+      summary: Create a new TriageOutcome resource.
+      operationId: createTriageOutcome
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/TriageOutcomeBundle'
+      responses:
+        '201':
+          description: TriageOutcome created
+
+components:
+  schemas:
+    TriageOutcomeBundle:
+      type: object
+      required: [resourceType, type, entry]
+      properties:
+        resourceType:
+          type: string
+          enum: [Bundle]
+          example: Bundle
+        id:
+          type: string
+          example: "2dadc02f-9401-41f1-9cf9-3d3f222c10ec"
+        type:
+          type: string
+          enum: [collection]
+          example: collection
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                example: "self"
+              url:
+                type: string
+                example: "/api/rest/fhir/clients/7f781789-d716-4f7b-b4ca-df4dbc0db2de/generalmeasurements"
+        entry:
+          type: array
+          items:
+            type: object
+            required: [resource]
+            properties:
+              resource:
+                oneOf:
+                  - $ref: '#/components/schemas/Observation'
+                  - $ref: '#/components/schemas/QuestionnaireResponse'
+
+    Observation:
+      type: object
+      required: [resourceType, status, code]
+      properties:
+        resourceType:
+          type: string
+          enum: [Observation]
+          example: Observation
+        meta:
+          type: object
+          properties:
+            profile:
+              type: array
+              items:
+                type: string
+                example: "http://hl7.org/fhir/StructureDefinition/nl-core-Observation"
+        status:
+          type: string
+          enum: [final]
+          example: final
+        code:
+          type: object
+          required: [coding]
+          properties:
+            coding:
+              type: array
+              items:
+                type: object
+                properties:
+                  system:
+                    type: string
+                    example: "http://loinc.org"
+                  code:
+                    type: string
+                    example: "61146-7"
+                  display:
+                    type: string
+                    example: "Subjective journal line"
+        valueString:
+          type: string
+          example: "Digital consultation.; Eye complaints: watch out for shingles; something got into eye. Gunpowder.; Suffering from: blurry vision, photophobia, light flashes; blurry vision (even after blinking); redness, thick skin around eye/eyelid, tearing; Since: 1 day.; Additional: wears contact lenses; moderate headache"
+    QuestionnaireResponse:
+      type: object
+      required: [resourceType, status, item]
+      properties:
+        resourceType:
+          type: string
+          enum: [QuestionnaireResponse]
+          example: QuestionnaireResponse
+        identifier:
+          type: object
+          properties:
+            value:
+              type: string
+              example: "7f781789-d716-4f7b-b4ca-df4dbc0db2de"
+        questionnaire:
+          type: object
+          properties:
+            reference:
+              type: string
+              example: "https://monitoring.viplive.nl/rest/fhir/questionnaire/Spreekuur Urgentiechecker 14.1 - icm SU 38.1"
+        status:
+          type: string
+          enum: [completed]
+          example: completed
+        authored:
+          type: string
+          format: date-time
+          example: "2025-08-28T08:08:20+00:00"
+        item:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionnaireResponseItem'
+    ArtstekstenExtension:
+      description: Contains the question text or answer text which will be displayed to the practitioner.
+      type: object
+      required: [url, valueString]
+      properties:
+        url:
+          type: string
+          enum: ["http://monitoring.viplive.nl/fhir/StructureDefinition/Artsteksten"]
+          example: "http://monitoring.viplive.nl/fhir/StructureDefinition/Artsteksten"
+        valueString:
+          type: string
+          example: "Klachtgebied"
+    CategorieExtension:
+      type: object
+      required: [url, valueString]
+      properties:
+        url:
+          type: string
+          enum: ["http://monitoring.viplive.nl/fhir/StructureDefinition/Categorie"]
+          example: "http://monitoring.viplive.nl/fhir/StructureDefinition/Categorie"
+        valueString:
+          type: string
+          example: "klacht/beloop"
+    SRuleExtension:
+      description: Added to answers which have influence on the S-rule outcome.
+      type: object
+      required: [url, valueString]
+      properties:
+        url:
+          type: string
+          enum: ["http://monitoring.viplive.nl/fhir/StructureDefinition/S-Rule"]
+          example: "http://monitoring.viplive.nl/fhir/StructureDefinition/S-Rule"
+        valueString:
+          type: string
+          example: "Sore eye"
+    QuestionnaireResponseItem:
+      type: object
+      required: [linkId, text]
+      properties:
+        extension:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/ArtstekstenExtension'
+              - $ref: '#/components/schemas/CategorieExtension'
+              - $ref: '#/components/schemas/SRuleExtension'
+        linkId:
+          type: string
+          example: "klacht_keuze"
+        text:
+          type: string
+          example: "Waarmee kunnen we je helpen?"
+        answer:
+          type: array
+          items:
+            type: object
+            properties:
+              extension:
+                type: array
+                items:
+                  oneOf:
+                    - $ref: '#/components/schemas/ArtstekstenExtension'
+                    - $ref: '#/components/schemas/SRuleExtension'
+              valueString:
+                type: string
+                example: "Oogklachten"
