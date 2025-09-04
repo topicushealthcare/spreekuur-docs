@@ -37,10 +37,10 @@ sequenceDiagram
     Spreekuur.nl->>XIS: GET /ValueSet/BookableAppointmentTypes
     Patient (User)->>Spreekuur.nl: (2) Get available practitioners
     Spreekuur.nl->>XIS: GET /PractitionerRole
-    Spreekuur.nl->>XIS: GET /Schedules?service-category=http://example-xis.nl/bookable-appointment-type|example
+    Spreekuur.nl->>XIS: GET /Schedules
     Spreekuur.nl->>Spreekuur.nl: Filter practitioners with available schedule for selected bookable appointment type
     Patient (User)->>Spreekuur.nl: (3) Get available timeslots
-    Spreekuur.nl->>XIS: GET /Slot?schedule.date=ge2023-10-01&schedule.date=le2023-10-08&schedule.actor:PractitionerRole=practitioner-id-1,practitioner-id-2&service-category=service-type-id
+    Spreekuur.nl->>XIS: GET /Slot
     Patient (User)->>Spreekuur.nl: Give reason for appointment
     Patient (User)->>Spreekuur.nl: (4) Create appointment
     Spreekuur.nl->>XIS: POST /Appointment
