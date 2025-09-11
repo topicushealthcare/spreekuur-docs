@@ -22,7 +22,7 @@ or will be advised to contact the practice by phone.
 When a chat is started, the triage data will be sent to the XIS. The triage data contains:
 - The answers of the questionnaire
 - Urgency
-- Automatically generated s-rule (subjective journal line)
+- Automatically generated s-line (subjective journal line)
 
 ## Starting an e-consult with triage
 To start an e-consult with triage, the flow is as follows:
@@ -35,7 +35,7 @@ sequenceDiagram
     
     Patient (User)->>Spreekuur.nl:(1) Start e-consult
     Patient (User)->>Spreekuur.nl:(2) Fill in triage questionnaire
-    Spreekuur.nl->>Spreekuur.nl:(3) Determine urgency and s-rule
+    Spreekuur.nl->>Spreekuur.nl:(3) Determine urgency and s-line
     alt urgency is high
         Spreekuur.nl->>Patient (User):(4) Advise to call practice
     else urgency is medium
@@ -51,7 +51,7 @@ and illustrates all the possible followup actions._
 
 1. The patient starts an e-consult in the Spreekuur.nl app.
 2. The patient fills in the triage questionnaire.
-3. Spreekuur.nl determines the urgency based on the answers given by the patient and generates an s-rule.
+3. Spreekuur.nl determines the urgency based on the answers given by the patient and generates an s-line.
 4. If the urgency is high, the patient is advised to call the practice (triage out)
 5. If the urgency is medium, a chat is started and the triage data is send to the XIS.
     1. A chat session is started in the chat service (see [chat functionality](/features/chat/chats))

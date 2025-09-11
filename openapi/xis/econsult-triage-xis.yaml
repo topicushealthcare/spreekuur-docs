@@ -153,15 +153,15 @@ components:
         valueString:
           type: string
           example: "klacht/beloop"
-    SRuleExtension:
-      description: Added to answers which have influence on the S-rule outcome.
+    SLineExtension:
+      description: Added to answers which have influence on the S-line outcome.
       type: object
       required: [url, valueString]
       properties:
         url:
           type: string
-          enum: ["http://monitoring.viplive.nl/fhir/StructureDefinition/S-Rule"]
-          example: "http://monitoring.viplive.nl/fhir/StructureDefinition/S-Rule"
+          enum: ["http://monitoring.viplive.nl/fhir/StructureDefinition/S-Line"]
+          example: "http://monitoring.viplive.nl/fhir/StructureDefinition/S-Line"
         valueString:
           type: string
           example: "Sore eye"
@@ -175,7 +175,7 @@ components:
             oneOf:
               - $ref: '#/components/schemas/ArtstekstenExtension'
               - $ref: '#/components/schemas/CategorieExtension'
-              - $ref: '#/components/schemas/SRuleExtension'
+              - $ref: '#/components/schemas/SLineExtension'
         linkId:
           type: string
           example: "klacht_keuze"
