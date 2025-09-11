@@ -20,7 +20,7 @@ patient an urgency will be determined. Based on that urgency the patient will ei
 or will be advised to contact the practice by phone.
 
 When a chat is started, the triage data will be sent to the XIS. The triage data contains:
-- The questionnaire answers
+- The answers of the questionnaire
 - Urgency
 - Automatically generated s-rule (subjective journal line)
 
