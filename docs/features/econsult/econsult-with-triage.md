@@ -35,7 +35,7 @@ sequenceDiagram
     
     Patient (User)->>Spreekuur.nl:(1) Start e-consult
     Patient (User)->>Spreekuur.nl:(2) Fill in triage questionnaire
-    Spreekuur.nl->>Spreekuur.nl:(3) Determine urgency and s-line
+    Spreekuur.nl->>Spreekuur.nl:(3) Determine urgency and S-line
     alt urgency is high
         Spreekuur.nl->>Patient (User):(4) Advise to call practice
     else urgency is medium
