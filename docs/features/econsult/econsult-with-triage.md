@@ -16,8 +16,8 @@ sidebar_position: 1
 ## Functional summary
 When e-consult with triage functionality is enabled for an organisation, patients will be triaged before they can submit 
 an e-consult. The triage process is done by a questionnaire that is filled in by the patient. Based on the answers given by the
-patient an urgency will be determined and the patient will either see a self-care advice, can start a chat (see [chats functionality](/features/chat/chats)) 
-or will be advised to contact the practice by phone based on the urgency.
+patient an urgency will be determined. Based on that urgency the patient will either see a self-care advice, can start a chat (see [chats functionality](/features/chat/chats)) 
+or will be advised to contact the practice by phone.
 
 When a chat is started, the triage data will be sent to the XIS. The triage data contains:
 - The questionnaire answers
