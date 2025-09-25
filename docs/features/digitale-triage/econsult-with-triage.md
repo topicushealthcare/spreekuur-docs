@@ -44,7 +44,7 @@ sequenceDiagram
 3. Spreekuur.nl Digitale Triage starts the triage questionnaire
 4. The patient fills in the triage questionnaire.
 5. If the urgency is high U1 or U2, a triage out message* is shown to the patient and the triage data is sent to the 
-   patient portal as a FHIR Bundle containing the Observation[S-line>], Observation[Urgency] and the QuestionnaireResponse.
+   patient portal as a FHIR Bundle containing the Observation[S-line], Observation[Urgency] and the QuestionnaireResponse.
 6. If the urgency is U3, U4, U5 or no urgency, the triage data is sent to the patient portal as a FHIR Bundle 
    containing the Observation[S-line], Observation[Urgency] and the QuestionnaireResponse.
 7. The patient portal starts the follow-up action based on the received urgency.
