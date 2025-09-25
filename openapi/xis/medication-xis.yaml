@@ -292,16 +292,23 @@ components:
           description: The date and time when the new MedicationRequest was created. This is set to the current time when the request is made.
           example: "2025-08-08T12:00:00+02:00"
         note:
-          type: string
-          description: Optional note from the patient regarding the medication request.
-          example: "I want a double dose of this medication because I'm traveling."
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+            description: Optional note from the patient regarding the medication request.
+            example: "I want a double dose of this medication because I'm traveling."
         basedOn:
-          type: object
-          properties:
-            reference:
-              type: string
-              example: "MedicationRequest/example-medication-request-id-1"
-          description: A reference to the original MedicationRequest that this new request is based on.
+          type: array
+          items:
+            type: object
+            properties:
+              reference:
+                type: string
+                example: "MedicationRequest/example-medication-request-id-1"
+            description: A reference to the original MedicationRequest that this new request is based on.
         intent:
           type: string
           enum: [ order ]
