@@ -48,3 +48,5 @@ sequenceDiagram
 6. If the urgency is U3, U4, U5 or no urgency, the triage data is sent to the patient portal as a FHIR Bundle 
    containing the Observation[S-line], Observation[Urgency] and the QuestionnaireResponse.
 7. The patient portal starts the follow-up action based on the received urgency.
+
+*The triage out message advises the patient to contact the practice by the emergency phone number.
