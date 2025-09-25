@@ -54,6 +54,11 @@ components:
               type: string
               example: "Patient/example-patient-id-1"
         note:
-          type: string
-          description: Optional note from the practitioner regarding the medication request.
-          example: "When taking this medication, please ensure you drink plenty of water."
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+                description: The annotation text content.
+                example: "When taking this medication, please ensure you drink plenty of water."

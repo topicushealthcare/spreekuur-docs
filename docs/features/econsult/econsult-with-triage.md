@@ -23,6 +23,8 @@ When a chat is started, the triage data will be sent to the XIS. The triage data
 - The answers of the questionnaire
 - Urgency
 - Automatically generated s-line (subjective journal line)
+  - The S line (or "s regel") is the subjective perception of the patient about his/her complaints. 
+    See https://nl.wikipedia.org/wiki/SOEPstatus (in Dutch) for more information.
 
 ## Starting an e-consult with triage
 To start an e-consult with triage, the flow is as follows:
