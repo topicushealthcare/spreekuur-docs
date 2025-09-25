@@ -192,7 +192,7 @@ components:
                 items:
                   oneOf:
                     - $ref: '#/components/schemas/ArtstekstenExtension'
-                    - $ref: '#/components/schemas/SRuleExtension'
+                    - $ref: '#/components/schemas/SLineExtension'
               valueString:
                 type: string
                 example: "Oogklachten"
