@@ -90,10 +90,12 @@ components:
           type: array
           items:
             type: object
-            required: [ resource ]
+            required: [ medication-request, organization ]
             properties:
-              resource:
+              medication-request:
                 $ref: '#/components/schemas/MedicationRequest'
+              organization:
+                $ref: '#/components/schemas/Organization'
     MedicationRequest:
       type: object
       required: [ resourceType, id, extension, status, medicationReference, intent, subject, performer, dispenseRequest ]
