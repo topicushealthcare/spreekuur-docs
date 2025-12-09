@@ -107,7 +107,6 @@ components:
                 type: string
                 format: uuid
                 example: "d3641041-50c5-4141-b1eb-4e54d9bd0c15"
-                
     PatientInvite:
       type: object
       required: [ resourceType, id, identifier, telecom ]
