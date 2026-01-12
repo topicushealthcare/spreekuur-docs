@@ -11,7 +11,7 @@ paths:
       parameters:
         - name: "organization_agb"
           in: header
-          description: The AGB code of the organization to search the patient in.
+          description: The AGB code of the organization that is performing the search.
           required: true
           schema:
               type: string
@@ -47,7 +47,7 @@ paths:
       parameters:
         - name: "organization_agb"
           in: header
-          description: The AGB code of the organization to search the patient in.
+          description: The AGB code of the organization that is performing the search.
           required: true
           schema:
             type: string
