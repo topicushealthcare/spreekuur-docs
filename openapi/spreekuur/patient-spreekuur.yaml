@@ -1,13 +1,21 @@
 openapi: 3.0.3
 info:
   title: Spreekuur.nl Patient FHIR API
-  version: 1.0.0
+  version: 1.1.0
 
 paths:
   /Patient/_search:
     post:
       summary: Discover if a patient has a Spreekuur.nl account.
       operationId: findPatient
+      parameters:
+        - name: "organization_agb"
+          in: header
+          description: The AGB code of the organization that is performing the search.
+          required: true
+          schema:
+              type: string
+              example: "12345678"
       requestBody:
         required: true
         content:
@@ -19,7 +27,12 @@ paths:
               properties:
                 identifier:
                   type: string
-                  description: The patient's BSN number in the format system|value
+                  description: |
+                    The patient's BSN or Patient IDP ID in the format system|value
+                    
+                    Examples:
+                    - Using BSN: `http://fhir.nl/fhir/NamingSystem/bsn|123456782`
+                    - Using Patient IDP ID: `http://spreekuur.nl/fhir/NamingSystem/patientIdpId|d3641041-50c5-4141-b1eb-4e54d9bd0c15`
                   example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
       responses:
         '200':
@@ -31,6 +44,14 @@ paths:
   /Patient:
     post:
       summary: Send invitation mail to a Patient to start using Spreekuur.nl
+      parameters:
+        - name: "organization_agb"
+          in: header
+          description: The AGB code of the organization that is performing the search.
+          required: true
+          schema:
+            type: string
+            example: "12345678"
       operationId: invitePatient
       requestBody:
         required: true
