@@ -8,7 +8,7 @@ sidebar_position: 4
 |-------------|--------------|
 | Test        | ✅ Available  |
 | Acceptance  | ✅ Available  |
-| Production  | ✅ Available  |np
+| Production  | ✅ Available  |
 
 ## Functional summary
 With the Patient Discovery API a XIS can query Spreekuur.nl whether a Patient with a given BSN is already registered. It is 
