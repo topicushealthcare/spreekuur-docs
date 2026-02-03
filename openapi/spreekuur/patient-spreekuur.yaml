@@ -4,58 +4,6 @@ info:
   version: 1.1.0
 
 paths:
-  /Patient:
-    get:
-      summary: Discover if a patient has a Spreekuur.nl account.
-      operationId: findPatient
-      parameters:
-        - name: identifier
-          in: query
-          description: The patient's BSN number or Patient IDP ID in the format system|value
-          required: true
-          schema:
-            type: string
-            example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
-        - name: organization_agb
-          in: header
-          description: The AGB code of the organization that is performing the search.
-          required: true
-          schema:
-            type: string
-            example: "12345678"
-      responses:
-        '200':
-          description: Bundle with a single Patient resource when the patient is registered at the organization
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/PatientBundle'
-    post:
-      summary: Send invitation mail to a Patient to start using Spreekuur.nl or invite to an existing chat
-      operationId: invitePatient
-      parameters:
-        - name: organization_agb
-          in: header
-          description: The AGB code of the organization inviting the patient
-          required: true
-          schema:
-            type: string
-            example: "88888888"
-      requestBody:
-        required: true
-        content:
-          application/fhir+json:
-            schema:
-              oneOf:
-                - $ref: '#/components/schemas/PatientInvite'
-                - $ref: '#/components/schemas/PatientInviteForChat'
-      responses:
-        '201':
-          description: Patient invited successfully (regular invite)
-        '202':
-          description: Patient invited for an existing chat channel
-        '422':
-          description: Conflict - Patient is already registered
   /Patient/_search:
     post:
       summary: Search for a patient by identifier (BSN or patientIdpId)
@@ -145,6 +93,59 @@ paths:
                           identifier:
                             - system: "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
                               value: "70c40ec4-005f-4236-b713-065ea17e962a"
+  /Patient:
+    get:
+      summary: Discover if a patient has a Spreekuur.nl account.
+      operationId: findPatient
+      parameters:
+        - name: identifier
+          in: query
+          description: The patient's BSN number or Patient IDP ID in the format system|value
+          required: true
+          schema:
+            type: string
+            example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
+        - name: organization_agb
+          in: header
+          description: The AGB code of the organization that is performing the search.
+          required: true
+          schema:
+            type: string
+            example: "12345678"
+      responses:
+        '200':
+          description: Bundle with a single Patient resource when the patient is registered at the organization
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/PatientBundle'
+    post:
+      summary: Send invitation mail to a Patient to start using Spreekuur.nl or invite to an existing chat
+      operationId: invitePatient
+      parameters:
+        - name: organization_agb
+          in: header
+          description: The AGB code of the organization inviting the patient
+          required: true
+          schema:
+            type: string
+            example: "88888888"
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/PatientInvite'
+                - $ref: '#/components/schemas/PatientInviteForChat'
+      responses:
+        '201':
+          description: Patient invited successfully (regular invite)
+        '202':
+          description: Patient invited for an existing chat channel
+        '422':
+          description: Conflict - Patient is already registered
+
 
 components:
   schemas:
