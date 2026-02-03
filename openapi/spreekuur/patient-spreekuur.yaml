@@ -296,7 +296,7 @@ components:
               - "Gebruiker"
         telecom:
           - system: "email"
-            value: "woodappel+266534855@proton.me"
+            value: "example-patient@example.local"
             use: "home"
       properties:
         resourceType:
@@ -414,7 +414,7 @@ components:
                 example: email
               value:
                 type: string
-                example: "woodappel+266534855@proton.me"
+                example: "example-patient@example.local"
               use:
                 type: string
                 example: "home"
