@@ -6,62 +6,146 @@ info:
 paths:
   /Patient/_search:
     post:
-      summary: Discover if a patient has a Spreekuur.nl account.
-      operationId: findPatient
+      summary: Search for a patient by identifier (BSN or patientIdpId)
+      operationId: searchPatient
       parameters:
-        - name: "organization_agb"
-          in: header
-          description: The AGB code of the organization that is performing the search.
-          required: true
-          schema:
-              type: string
-              example: "12345678"
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - identifier
-              properties:
-                identifier:
-                  type: string
-                  description: |
-                    The patient's BSN or Patient IDP ID in the format system|value
-                    
-                    Examples:
-                    - Using BSN: `http://fhir.nl/fhir/NamingSystem/bsn|123456782`
-                    - Using Patient IDP ID: `http://spreekuur.nl/fhir/NamingSystem/patientIdpId|d3641041-50c5-4141-b1eb-4e54d9bd0c15`
-                  example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
-      responses:
-        '200':
-          description: A bundle which contains a single Patient resource if the patient is registered at the organization.
-          content:
-            application/fhir+json:
-              schema:
-                $ref: '#/components/schemas/PatientBundle'
-  /Patient:
-    post:
-      summary: Send invitation mail to a Patient to start using Spreekuur.nl
-      parameters:
-        - name: "organization_agb"
+        - name: organization_agb
           in: header
           description: The AGB code of the organization that is performing the search.
           required: true
           schema:
             type: string
             example: "12345678"
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required: [ identifier ]
+              properties:
+                identifier:
+                  type: string
+                  description: "Patient identifier in the format 'system|value'. Use 'http://fhir.nl/fhir/NamingSystem/bsn|{bsn}' for BSN search or 'http://spreekuur.nl/fhir/NamingSystem/patientIdpId|{uuid}' for patientIdpId search."
+                  example: "http://fhir.nl/fhir/NamingSystem/bsn|336226068"
+            examples:
+              searchByBSN:
+                summary: Search by BSN
+                value:
+                  identifier: "http://fhir.nl/fhir/NamingSystem/bsn|336226068"
+              searchByPatientIdpId:
+                summary: Search by Patient IDP ID
+                value:
+                  identifier: "http://spreekuur.nl/fhir/NamingSystem/patientIdpId|595b6e12-1443-4ef5-8484-423b8a27472d"
+      responses:
+        '200':
+          description: Bundle containing the patients that matched the identifier
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/PatientBundle'
+              examples:
+                searchByBSNResponse:
+                  summary: Response when searching by BSN
+                  description: Returns a patient with BSN identifier; resource includes spreekuurIdpId extension.
+                  value:
+                    resourceType: "Bundle"
+                    id: "af72b4e3-d5ae-4f01-8602-a2a48d62e4a9"
+                    meta:
+                      lastUpdated: "2026-02-03T12:10:48.654+01:00"
+                    type: "searchset"
+                    total: 1
+                    link:
+                      - relation: "self"
+                        url: "https://api-samen.test.spreekuur.nl/fhir/r4/Patient/_search"
+                    entry:
+                      - fullUrl: "https://api-samen.test.spreekuur.nl/fhir/r4/Patient/900249110"
+                        resource:
+                          resourceType: "Patient"
+                          id: "900249110"
+                          extension:
+                            - url: "http://spreekuur.nl/fhir/NamingSystem/spreekuurIdpId"
+                              valueString: "2911b89c-2680-4778-964d-6377a2372bf9"
+                          identifier:
+                            - system: "http://fhir.nl/fhir/NamingSystem/bsn"
+                              value: "900249110"
+                searchByPatientIdpIdResponse:
+                  summary: Response when searching by patientIdpId
+                  description: Returns a patient with patientIdpId identifier; resource includes spreekuurIdpId extension.
+                  value:
+                    resourceType: "Bundle"
+                    id: "3e9b2b49-601c-442a-87db-471b3163d0ef"
+                    meta:
+                      lastUpdated: "2026-02-03T12:15:38.425+01:00"
+                    type: "searchset"
+                    total: 1
+                    link:
+                      - relation: "self"
+                        url: "https://api-samen.test.spreekuur.nl/fhir/r4/Patient/_search"
+                    entry:
+                      - fullUrl: "https://api-samen.test.spreekuur.nl/fhir/r4/Patient/70c40ec4-005f-4236-b713-065ea17e962a"
+                        resource:
+                          resourceType: "Patient"
+                          id: "70c40ec4-005f-4236-b713-065ea17e962a"
+                          extension:
+                            - url: "http://spreekuur.nl/fhir/NamingSystem/spreekuurIdpId"
+                              valueString: "2911b89c-2680-4778-964d-6377a2372bf9"
+                          identifier:
+                            - system: "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
+                              value: "70c40ec4-005f-4236-b713-065ea17e962a"
+  /Patient:
+    get:
+      summary: Discover if a patient has a Spreekuur.nl account.
+      operationId: findPatient
+      parameters:
+        - name: identifier
+          in: query
+          description: The patient's BSN number or Patient IDP ID in the format system|value
+          required: true
+          schema:
+            type: string
+            example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
+        - name: organization_agb
+          in: header
+          description: The AGB code of the organization that is performing the search.
+          required: true
+          schema:
+            type: string
+            example: "12345678"
+      responses:
+        '200':
+          description: Bundle with a single Patient resource when the patient is registered at the organization
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/PatientBundle'
+    post:
+      summary: Send invitation mail to a Patient to start using Spreekuur.nl or invite to an existing chat
       operationId: invitePatient
+      parameters:
+        - name: organization_agb
+          in: header
+          description: The AGB code of the organization inviting the patient
+          required: true
+          schema:
+            type: string
+            example: "88888888"
       requestBody:
         required: true
         content:
           application/fhir+json:
             schema:
-              $ref: '#/components/schemas/PatientInvite'
+              oneOf:
+                - $ref: '#/components/schemas/PatientInvite'
+                - $ref: '#/components/schemas/PatientInviteForChat'
       responses:
         '201':
-          description: Patient invited
+          description: Patient invited successfully (regular invite)
+        '202':
+          description: Patient invited for an existing chat channel
+        '422':
+          description: Conflict - Patient is already registered
+
 
 components:
   schemas:
@@ -105,19 +189,9 @@ components:
         id:
           type: string
           example: 123456782
-        identifier:
-          type: array
-          items:
-            type: object
-            properties:
-              system:
-                type: string
-                example: "http://fhir.nl/fhir/NamingSystem/bsn"
-              value:
-                type: string
-                example: 123456782
         extension:
           type: array
+          description: FHIR extensions, may include spreekuurIdpId
           items:
             type: object
             properties:
@@ -127,9 +201,27 @@ components:
               valueString:
                 type: string
                 format: uuid
-                example: "d3641041-50c5-4141-b1eb-4e54d9bd0c15"
+                example: "2911b89c-2680-4778-964d-6377a2372bf9"
+        identifier:
+          type: array
+          description: Patient identifier. Can use either BSN or patientIdpId system.
+          items:
+            type: object
+            properties:
+              system:
+                type: string
+                description: Identifier system
+                enum:
+                  - "http://fhir.nl/fhir/NamingSystem/bsn"
+                  - "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
+                example: "http://fhir.nl/fhir/NamingSystem/bsn"
+              value:
+                type: string
+                description: The identifier value (BSN number or patient IDP ID UUID)
+                example: 123456782
     PatientInvite:
       type: object
+      description: Regular patient invitation using BSN or patientIdpId
       required: [ resourceType, id, identifier, telecom ]
       properties:
         resourceType:
@@ -141,16 +233,175 @@ components:
           example: "example-patient-id"
         identifier:
           type: array
+          description: Patient identifier. Use either BSN or patientIdpId system.
           items:
             type: object
             required: [ system, value ]
             properties:
               system:
                 type: string
+                description: Identifier system. Use 'http://fhir.nl/fhir/NamingSystem/bsn' for BSN or 'http://spreekuur.nl/fhir/NamingSystem/patientIdpId' for patient IDP ID.
+                enum:
+                  - "http://fhir.nl/fhir/NamingSystem/bsn"
+                  - "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
                 example: "http://fhir.nl/fhir/NamingSystem/bsn"
               value:
                 type: string
-                example: 123456782
+                description: The identifier value (BSN number or patient IDP ID UUID)
+                example: "123456782"
+        telecom:
+          type: array
+          items:
+            type: object
+            required: [ system, value ]
+            properties:
+              system:
+                type: string
+                enum: [ email ]
+                example: email
+              value:
+                type: string
+                example: "patient@example.com"
+    PatientInviteForChat:
+      type: object
+      description: Patient invitation for an existing chat channel
+      required: [ resourceType, id, identifier, extension, telecom, managingOrganization ]
+      example:
+        resourceType: "Patient"
+        contained:
+          - resourceType: "Practitioner"
+            id: "ralf"
+            name:
+              - family: "Landrover"
+                given:
+                  - "Ralf"
+        id: "example"
+        identifier:
+          - system: "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
+            value: "7cdffea7-1da4-46d7-9827-c6e84078e7d7"
+        extension:
+          - url: "http://getstream.io/channelType"
+            valueString: "gesprek"
+          - url: "http://getstream.io/channelId"
+            valueString: "gesprek-b8441848-15d5-4548-b294-b9a85343cdfa"
+        managingOrganization:
+          display: "TestMedikitorganinsation"
+        generalPractitioner:
+          - reference: "#ralf"
+            display: "Ralf Landrover"
+        name:
+          - use: "official"
+            family: "Nieuwe"
+            given:
+              - "Gebruiker"
+        telecom:
+          - system: "email"
+            value: "example-patient@example.local"
+            use: "home"
+      properties:
+        resourceType:
+          type: string
+          enum: [ Patient ]
+          example: Patient
+        id:
+          type: string
+          example: "example"
+        contained:
+          type: array
+          description: Contained resources, such as the practitioner inviting the patient
+          items:
+            type: object
+            properties:
+              resourceType:
+                type: string
+                example: "Practitioner"
+              id:
+                type: string
+                example: "ralf"
+              name:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    family:
+                      type: string
+                      example: "Landrover"
+                    given:
+                      type: array
+                      items:
+                        type: string
+                      example: ["Ralf"]
+        identifier:
+          type: array
+          description: Patient identifier. For chat invites, typically uses the patientIdpId system.
+          items:
+            type: object
+            required: [ system, value ]
+            properties:
+              system:
+                type: string
+                description: Identifier system. Use 'http://fhir.nl/fhir/NamingSystem/bsn' for BSN or 'http://spreekuur.nl/fhir/NamingSystem/patientIdpId' for patient IDP ID.
+                enum:
+                  - "http://fhir.nl/fhir/NamingSystem/bsn"
+                  - "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
+                example: "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
+              value:
+                type: string
+                description: The identifier value (BSN number or patient IDP ID UUID)
+                example: "7cdffea7-1da4-46d7-9827-c6e84078e7d7"
+        extension:
+          type: array
+          description: Extensions for chat channel information (required for chat invites). Must include both channelType and channelId extensions.
+          items:
+            type: object
+            required: [ url, valueString ]
+            properties:
+              url:
+                type: string
+                description: Extension URL. Use 'http://getstream.io/channelType' for channel type or 'http://getstream.io/channelId' for channel ID.
+                enum:
+                  - "http://getstream.io/channelType"
+                  - "http://getstream.io/channelId"
+                example: "http://getstream.io/channelType"
+              valueString:
+                type: string
+                description: For channelType use 'gesprek', for channelId use the channel identifier (e.g., 'gesprek-{uuid}')
+                example: "gesprek"
+        managingOrganization:
+          type: object
+          description: The organization managing the patient
+          properties:
+            display:
+              type: string
+              example: "TestMedikitorganinsation"
+        generalPractitioner:
+          type: array
+          description: Reference to the general practitioner
+          items:
+            type: object
+            properties:
+              reference:
+                type: string
+                example: "#ralf"
+              display:
+                type: string
+                example: "Ralf Landrover"
+        name:
+          type: array
+          items:
+            type: object
+            properties:
+              use:
+                type: string
+                example: "official"
+              family:
+                type: string
+                example: "Nieuwe"
+              given:
+                type: array
+                items:
+                  type: string
+                example: ["Gebruiker"]
         telecom:
           type: array
           items:
@@ -164,3 +415,6 @@ components:
               value:
                 type: string
                 example: "example-patient@example.local"
+              use:
+                type: string
+                example: "home"

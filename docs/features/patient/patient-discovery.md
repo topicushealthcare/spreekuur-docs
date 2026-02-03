@@ -62,6 +62,37 @@ sequenceDiagram
         Spreekuur.nl with the inviting organisation pre-selected.
     2. If the patient is already registered, Spreekuur.nl returns a 422 Conflict response.
 
+## XIS to Spreekuur.nl Invite Patient for a spreekuur chat
+The flow to invite a patient is as follows:
+```mermaid
+sequenceDiagram
+    actor Patient (User)
+    participant Spreekuur.nl
+    participant XIS
+    actor Practitioner
+
+    Practitioner->>XIS: (1) Invite patient for existing chat
+    XIS->>Spreekuur.nl: (2) POST /Patient
+    alt if patient is not registered
+        Spreekuur.nl->>Patient (User): (3.1) Invite Patient by email
+        Spreekuur.nl-->>XIS: 202
+        Patient (User)->>Spreekuur.nl: (3.2) Login for the first time
+        Spreekuur.nl->>Spreekuur.nl: (3.3) Add patient to chat channel
+        Spreekuur.nl->>Spreekuur.nl: (3.4) Add system message to chat
+    else if patient is registered
+        Spreekuur.nl-->>XIS: (4) 422 Conflict
+    end
+```
+
+1. The practitioner invites a patient in the XIS having a chat channel with an opening message (this works if the XIS uses the same Chat service instance as spreekuur.nl).
+2. The XIS sends a POST request to Spreekuur.nl to invite the patient.
+3. **If the patient not registered:**
+    1. Spreekuur.nl sends an email to the patient with a link to the login page of Spreekuur.nl with the inviting organisation pre-selected.
+    2. Patient logs in first time and creates an account 
+    3. Phe patient is added to the chat and can continue the chat
+    4. System message is added to the chat informing everyone that the patient has been added.
+4. **If the patient is already registered:** Spreekuur.nl returns a 422 Conflict response.
+
 ## Spreekuur.nl to XIS Patient Discovery
 The flow to discover if a patient is registered at a given organisation is as follows:
 ```mermaid
