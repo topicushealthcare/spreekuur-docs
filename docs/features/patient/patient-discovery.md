@@ -76,9 +76,13 @@ sequenceDiagram
     alt if patient is not registered
         Spreekuur.nl->>Patient (User): (3.1) Invite Patient by email
         Spreekuur.nl-->>XIS: 202
+        alt if patient creates account
         Patient (User)->>Spreekuur.nl: (3.2) Login for the first time
         Spreekuur.nl->>Spreekuur.nl: (3.3) Add patient to chat channel
         Spreekuur.nl->>Spreekuur.nl: (3.4) Add system message to chat
+        else patient does not log in within 6 weeks
+        Spreekuur.nl->>Spreekuur.nl: (5) Delete pending channel
+        end
     else if patient is registered
         Spreekuur.nl-->>XIS: (4) 422 Conflict
     end
@@ -89,9 +93,12 @@ sequenceDiagram
 3. **If the patient not registered:**
     1. Spreekuur.nl sends an email to the patient with a link to the login page of Spreekuur.nl with the inviting organisation pre-selected.
     2. Patient logs in first time and creates an account 
-    3. Phe patient is added to the chat and can continue the chat
+    3. The patient is added to the chat and can continue the chat
     4. System message is added to the chat informing everyone that the patient has been added.
 4. **If the patient is already registered:** Spreekuur.nl returns a 422 Conflict response.
+5. **If patient does not register within 6 weeks** from the invitation the chat invitation expires. 
+When the patient creates an account afterwards he will not be added to the channel. A System message is sent to the channel that the patient will no longer join.
+
 
 ## Spreekuur.nl to XIS Patient Discovery
 The flow to discover if a patient is registered at a given organisation is as follows:
