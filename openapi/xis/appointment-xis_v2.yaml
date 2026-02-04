@@ -74,6 +74,11 @@ paths:
           schema:
             type: string
           description: The Schedule id to which the slots are related
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: The Schedule id to which the slots are related
       responses:
         '200':
           description: A list of slots
@@ -110,6 +115,8 @@ paths:
       responses:
         '201':
           description: Appointment created
+        '409':
+          description: Conflict - Appointment could not be created due to a conflict (e.g., double booking)
   /AppointmentResponse:
     post:
       summary: Cancel an appointment with an Appointment Response
