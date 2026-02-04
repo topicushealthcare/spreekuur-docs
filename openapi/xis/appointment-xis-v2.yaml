@@ -195,7 +195,7 @@ components:
           example: PractitionerRole
         id:
           type: string
-          example: 123
+          example: "123"
         name:
           type: string
           example: "Dr. John Doe"
@@ -360,7 +360,6 @@ components:
         - participant
         - serviceCategory
         - comment
-        - participant
       properties:
         resourceType:
           type: string
