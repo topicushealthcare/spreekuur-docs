@@ -11,7 +11,7 @@ sidebar_position: 3
 | Production  | 🛑 Unavailable    |
 
 **API specifications:**
-* [API Spreekuur.nl](/openapi/notification-spreekuur)
+* [API Spreekuur.nl](api-spreekuur.mdx)
 
 ## Functional summary
 With the Notification feature, practitioners can send one-way messages to patients. Patients cannot respond to these messages.

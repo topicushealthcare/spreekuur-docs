@@ -11,8 +11,8 @@ sidebar_position: 3
 | Production  | ✅ Available  |
 
 **API specifications:**
-* [API Spreekuur.nl](/openapi/medication-spreekuur)
-* [API XIS](/openapi/medication-xis)
+* [API Spreekuur.nl](api-spreekuur.mdx)
+* [API XIS](api-xis.mdx)
 
 ## Functional summary
 With the Order Medication feature patients can order medication via Spreekuur.nl. The practitioner can approve or reject

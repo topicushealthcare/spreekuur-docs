@@ -4,7 +4,7 @@ sidebar_position: 1
 # Appointment creation V1
 
 **API specifications:**
-* [API XIS](/openapi/xis/appointment-xis-v1) (version 1)
+* [API XIS](../api-xis/api-xis-v1.mdx) (version 1)
 
 
 ## Appointment creation
