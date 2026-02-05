@@ -12,9 +12,10 @@ sidebar_position: 1
 | Production  | ✅ Available  |
 
 **API specifications:**
-* [API Spreekuur.nl](/openapi/appointment-spreekuur)
-* [API XIS](/openapi/appointment-xis-v1) (version 1)
-* [API XIS](/openapi/appointment-xis-v2) (version 2)
+* [API Spreekuur.nl](api-spreekuur.mdx)
+* [API XIS](api-xis/api-xis-v1.mdx) (version 1)
+* [API XIS](api-xis/api-xis-v2.mdx) (version 2)
+
 
 ## Functional summary
 A patient can make an appointment with a practitioner or practice via the Spreekuur.nl platform. The patient selects a
