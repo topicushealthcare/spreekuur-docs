@@ -257,10 +257,17 @@ components:
         entry:
           type: array
           items:
-            $ref: '#/components/schemas/Slot'
+            type: object
+            required: [ fullUrl, resource ]
+            properties:
+              fullUrl:
+                type: string
+                example: "https://www.example-xis.nl/Slot/123"
+              resource:
+                $ref: '#/components/schemas/Slot'
     Slot:
       type: object
-      required: [ resourceType, id, status, start, end, serviceCategory, extension, slotType ]
+      required: [ resourceType, id, status, start, end, serviceCategory, extension ]
       properties:
         resourceType:
           type: string
@@ -268,7 +275,7 @@ components:
           example: Slot
         id:
           type: string
-          example: 123
+          example: "123"
         status:
           type: string
           enum: [ free, busy, needs-action ]
@@ -302,25 +309,6 @@ components:
                   display:
                     type: string
                     example: "Dokter Jansen"
-        slotType:
-          type: object
-          properties:
-            coding:
-              type: array
-              items:
-                type: object
-                required: [ system, code, display ]
-                properties:
-                  system:
-                    type: string
-                    example: "http://www.example-xis.nl/ns/slot-type"
-                  code:
-                    type: string
-                    example: "E-CONSULT"
-                  display:
-                    type: string
-                    example: "E-Consult"
-
     AppointmentSearchResultBundle:
       type: object
       properties:
