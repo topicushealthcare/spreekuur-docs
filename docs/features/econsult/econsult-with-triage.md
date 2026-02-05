@@ -11,7 +11,7 @@ sidebar_position: 1
 | Production  | 🛑 Unavailable    |
 
 **API specifications:**
-* [API XIS](/openapi/econsult-triage-xis)
+* [API XIS](api-xis.mdx)
 
 ## Functional summary
 When e-consult functionality is enabled for an organisation, patients will be triaged before they can submit 

@@ -1,13 +1,19 @@
 openapi: 3.0.3
 info:
   title: XIS appointment FHIR API
-  version: 1.0.0
+  version: 2.0.0
 
 paths:
   /ValueSet/BookableAppointmentTypes:
     get:
       summary: Get Bookable Appointment Types
       operationId: getBookableAppointmentTypes
+      parameters:
+        - in: query
+          name: service-category
+          schema:
+            type: string
+          description: The service category an appointment type is related to.
       responses:
         '200':
           description: A list of bookable appointment types
@@ -64,10 +70,15 @@ paths:
             type: string
           description: The date in ISO-8601 to which to search for available slots. 
         - in: query
-          name: schedule.actor:PractitionerRole
+          name: schedule
           schema:
             type: string
-          description: A comma seperated list of PractitionerRole id's which are related to the slots
+          description: The Schedule id to which the slots are related
+        - in: query
+          name: status
+          schema:
+            type: string
+          description: The Schedule id to which the slots are related
       responses:
         '200':
           description: A list of slots
@@ -104,6 +115,12 @@ paths:
       responses:
         '201':
           description: Appointment created
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '409':
+          description: Conflict - Appointment could not be created due to a conflict (e.g., double booking)
   /AppointmentResponse:
     post:
       summary: Cancel an appointment with an Appointment Response
@@ -182,7 +199,7 @@ components:
           example: PractitionerRole
         id:
           type: string
-          example: 123
+          example: "123"
         name:
           type: string
           example: "Dr. John Doe"
@@ -244,7 +261,7 @@ components:
                 example: "PractitionerRole/topicus-practitioner-1-practitionerrole-1"
     SlotSearchResultBundle:
       type: object
-      required: [ resourceType, type ]
+      required: [ resourceType, type]
       properties:
         resourceType:
           type: string
@@ -267,7 +284,7 @@ components:
                 $ref: '#/components/schemas/Slot'
     Slot:
       type: object
-      required: [ resourceType, id, status, start, end, serviceCategory, extension ]
+      required: [ resourceType, id, status, start, end, serviceCategory, extension, schedule ]
       properties:
         resourceType:
           type: string
@@ -275,7 +292,7 @@ components:
           example: Slot
         id:
           type: string
-          example: "123"
+          example: 123
         status:
           type: string
           enum: [ free, busy, needs-action ]
@@ -309,6 +326,13 @@ components:
                   display:
                     type: string
                     example: "Dokter Jansen"
+        schedule:
+          type: object
+          required: [ reference ]
+          properties:
+            reference:
+              type: string
+              example: "Schedule/123"
     AppointmentSearchResultBundle:
       type: object
       properties:
@@ -340,7 +364,6 @@ components:
         - participant
         - serviceCategory
         - comment
-        - participant
       properties:
         resourceType:
           type: string

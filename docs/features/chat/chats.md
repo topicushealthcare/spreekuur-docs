@@ -11,8 +11,8 @@ sidebar_position: 2
 | Production  | ✅ Available  |
 
 **API specifications:**
-* [API Spreekuur.nl](/openapi/chat-spreekuur)
-* [API XIS](/openapi/chat-xis)
+* [API Spreekuur.nl](api-spreekuur.mdx)
+* [API XIS](api-xis.mdx)
 
 ## Functional summary
 With the chat functionality, Spreekuur.nl offers a way for practitioners to communicate with patients via chat. This chat

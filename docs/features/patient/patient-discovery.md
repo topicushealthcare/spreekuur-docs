@@ -10,6 +10,10 @@ sidebar_position: 4
 | Acceptance  | ✅ Available  |
 | Production  | ✅ Available  |
 
+**API specifications:**
+* [API Spreekuur.nl](api-spreekuur.mdx)
+* [API XIS](api-xis.mdx)
+
 ## Functional summary
 With the Patient Discovery API a XIS can query Spreekuur.nl whether a Patient with a given BSN is already registered. It is 
 also possible to invite a patient to start using Spreekuur.nl. The patient will receive an email with a link to 

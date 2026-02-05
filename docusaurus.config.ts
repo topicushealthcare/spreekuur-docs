@@ -58,9 +58,14 @@ const config: Config = {
                 specs: [
                     // You can also pass it a OpenAPI spec URL
                     {
-                        spec: 'openapi/xis/appointment-xis.yaml',
-                        id: 'appointment-xis',
-                        route: '/openapi/appointment-xis',
+                        spec: 'openapi/xis/appointment-xis-v1.yaml',
+                        id: 'appointment-xis-v1',
+                        route: '/openapi/appointment-xis-v1',
+                    },
+                    {
+                        spec: 'openapi/xis/appointment-xis-v2.yaml',
+                        id: 'appointment-xis-v2',
+                        route: '/openapi/appointment-xis-v2',
                     },
                     {
                         spec: 'openapi/spreekuur/appointment-spreekuur.yaml',
