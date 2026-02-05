@@ -115,6 +115,10 @@ paths:
       responses:
         '201':
           description: Appointment created
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
         '409':
           description: Conflict - Appointment could not be created due to a conflict (e.g., double booking)
   /AppointmentResponse:
