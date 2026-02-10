@@ -39,14 +39,35 @@ components:
         total:
           type: integer
           example: 1
+        link:
+          type: array
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                example: "self"
+              url:
+                type: string
+                example: "https://example.com/fhir/Patient"
         entry:
           type: array
           items:
             type: object
             required: [ resource ]
             properties:
+              fullUrl:
+                type: string
+                example: "https://example.com/fhir/Patient/example-patient-id-1"
               resource:
                 $ref: '#/components/schemas/Patient'
+              search:
+                type: object
+                properties:
+                  mode:
+                    type: string
+                    enum: [ match, include, outcome ]
+                    example: "match"
     Patient:
       type: object
       required: [ resourceType, id, identifier ]
