@@ -139,11 +139,16 @@ components:
   schemas:
     AppointmentType:
       type: object
+      required: [ resourceType, status, compose ]
       properties:
         resourceType:
           type: string
-          enum: [ AppointmentType ]
-          example: AppointmentType
+          enum: [ ValueSet ]
+          example: ValueSet
+        status:
+          type: string
+          enum: [ active, draft, retired, unknown ]
+          example: active
         compose:
           type: object
           required: [ include ]
@@ -154,22 +159,21 @@ components:
                 type: object
                 required: [ system, concept ]
                 properties:
-                  actor:
-                    type: object
-                    properties:
-                      system:
-                        type: string
-                        example: "http://www.example-xis.nl/ns/communication-type"
-                      concept:
-                        type: object
-                        required: [ code, display ]
-                        properties:
-                          code:
-                            type: string
-                            example: "E-CONSULT"
-                          display:
-                            type: string
-                            example: "E-Consult"
+                  system:
+                    type: string
+                    example: "http://example.xis.nl/cs/agendablok-type"
+                  concept:
+                    type: array
+                    items:
+                      type: object
+                      required: [ code, display ]
+                      properties:
+                        code:
+                          type: string
+                          example: "consult"
+                        display:
+                          type: string
+                          example: "Consult 30 min"
     PractitionerRoleSearchResultBundle:
       type: object
       required: [ resourceType, entry ]
