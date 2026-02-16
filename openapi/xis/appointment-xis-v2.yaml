@@ -115,6 +115,14 @@ paths:
       responses:
         '201':
           description: Appointment created
+          headers:
+            Location:
+              description: >
+                Canonical URL of the newly created Appointment, including the logical id
+                Example: Appointment/12345
+                The logical id is the segment after the resource type.
+              schema:
+                type: string
           content:
             application/fhir+json:
               schema:
