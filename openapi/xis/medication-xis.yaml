@@ -45,6 +45,18 @@ paths:
       responses:
         '201':
           description: MedicationRequest created
+          headers:
+            Location:
+              description: >
+                Canonical URL of the newly created MedicationRequest, including the logical id
+                Example: `MedicationRequest/12345
+                The logical id is the segment after the resource type.
+              schema:
+                type: string
+          content:
+            application/fhir+json:
+              schema:
+                $ref: '#/components/schemas/NewMedicationRequest'
   /Organization:
     get:
       summary: Search for pharmacies
