@@ -73,6 +73,11 @@ const config: Config = {
                         route: '/openapi/appointment-spreekuur',
                     },
                     {
+                        spec: 'openapi/spreekuur/appointment-update-spreekuur.yaml',
+                        id: 'appointment-update-spreekuur',
+                        route: '/openapi/appointment-update-spreekuur',
+                    },
+                    {
                         spec: 'openapi/xis/chat-xis.yaml',
                         id: 'chat-xis',
                         route: '/openapi/chat-xis',
