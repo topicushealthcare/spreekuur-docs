@@ -18,9 +18,9 @@ The XIS sends a FHIR `Appointment` resource with a `PUT /Appointment/{id}` reque
 and whether the appointment is already known in Spreekuur.nl, the update is handled as a new appointment, a modification,
 or a cancellation.
 
-:::info
-The XIS must include the `organization_agb` and `authorized_party` headers in the request. A XIS can only manage
-appointments for its own organizations.
+::: info
+The XIS must include the `x-organization-identifier` header in the request, in FHIR token format:
+`http://fhir.nl/fhir/NamingSystem/agb-z|{agb-code}`. A XIS can only manage appointments for its own organizations.
 :::
 
 ## Create appointment
