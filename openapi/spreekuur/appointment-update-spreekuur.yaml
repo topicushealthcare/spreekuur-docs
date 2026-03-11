@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: Spreekuur.nl Appointment update FHIR API
+  version: 1.0.0
+
+paths:
+  /Appointment/{id}:
+    put:
+      summary: Create, modify or cancel an Appointment
+      description: >
+        The XIS uses this endpoint to send Appointment updates to Spreekuur.nl.
+        Based on the status of the Appointment and whether it is already known in Spreekuur.nl,
+        the update is handled as a new appointment (status `booked`, not yet known),
+        a modification (status `booked`, already known) or a cancellation (status `cancelled`, already known).
+      operationId: updateAppointment
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The logical id of the Appointment resource in the XIS.
+        - in: header
+          name: x-organization-identifier
+          required: true
+          schema:
+            type: string
+            example: "http://fhir.nl/fhir/NamingSystem/agb-z|01000001"
+          description: >
+            The identifier of the organization the Appointment belongs to,
+            in FHIR token format: `http://fhir.nl/fhir/NamingSystem/agb-z|{agb-code}`.
+      requestBody:
+        required: true
+        content:
+          application/fhir+json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '200':
+          description: Appointment update processed successfully
+        '403':
+          description: Forbidden - The XIS is not allowed to manage appointments for this organization.
+components:
+  schemas:
+    Appointment:
+      type: object
+      required:
+        - resourceType
+        - id
+        - status
+        - start
+        - end
+        - participant
+        - serviceCategory
+      properties:
+        resourceType:
+          type: string
+          enum: [ Appointment ]
+          example: Appointment
+        id:
+          type: string
+          description: The logical id of the Appointment in the XIS.
+          example: "12345"
+        status:
+          type: string
+          enum: [ booked, cancelled ]
+          description: >
+            Use `booked` when creating or modifying an appointment.
+            Use `cancelled` when cancelling an appointment.
+          example: booked
+        start:
+          type: string
+          format: date-time
+          description: The start time of the appointment.
+          example: "2026-04-10T09:00:00Z"
+        end:
+          type: string
+          format: date-time
+          description: The end time of the appointment.
+          example: "2026-04-10T09:30:00Z"
+        comment:
+          type: string
+          description: Additional comments about the appointment.
+          example: "Please arrive 10 minutes early."
+        serviceCategory:
+          $ref: '#/components/schemas/serviceCategory'
+        participant:
+          description: >
+            The participants of the appointment. At minimum, the patient participant must be included
+            with an identifier (BSN) so Spreekuur.nl can match the Appointment to the correct patient.
+          type: array
+          items:
+            type: object
+            required: [ actor, status ]
+            properties:
+              actor:
+                type: object
+                required: [ reference, display ]
+                properties:
+                  reference:
+                    type: string
+                    example: "Patient/456"
+                  display:
+                    type: string
+                    example: "Jan Jansen"
+                  identifier:
+                    type: object
+                    required: [ system, value ]
+                    properties:
+                      system:
+                        type: string
+                        example: "http://fhir.nl/fhir/NamingSystem/bsn"
+                      value:
+                        type: string
+                        example: "123456789"
+              status:
+                type: string
+                enum: [ accepted ]
+                example: accepted
+    serviceCategory:
+      type: array
+      items:
+        type: object
+        required: [ coding ]
+        properties:
+          coding:
+            type: array
+            items:
+              type: object
+              required: [ system, code, display ]
+              properties:
+                system:
+                  type: string
+                  example: "http://www.example-xis.nl/ns/communication-type"
+                code:
+                  type: string
+                  example: "CONSULT"
+                display:
+                  type: string
+                  example: "Consult"
+
