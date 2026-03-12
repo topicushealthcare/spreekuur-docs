@@ -21,7 +21,7 @@ paths:
             type: string
           description: The logical id of the Appointment resource in the XIS.
         - in: header
-          name: x-organization-identifier
+          name: organization_agb
           required: true
           schema:
             type: string
