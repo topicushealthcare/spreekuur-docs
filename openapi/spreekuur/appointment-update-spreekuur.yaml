@@ -21,13 +21,13 @@ paths:
             type: string
           description: The logical id of the Appointment resource in the XIS.
         - in: header
-          name: x-organization-identifier
+          name: organisation_agb
           required: true
           schema:
             type: string
             example: "http://fhir.nl/fhir/NamingSystem/agb-z|01000001"
           description: >
-            The identifier of the organization the Appointment belongs to,
+            The identifier of the organisation the Appointment belongs to,
             in FHIR token format: `http://fhir.nl/fhir/NamingSystem/agb-z|{agb-code}`.
       requestBody:
         required: true
