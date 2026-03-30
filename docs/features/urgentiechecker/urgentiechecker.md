@@ -28,7 +28,7 @@ This will load the necessary JavaScript and CSS for the Urgentiechecker componen
 After adding these tags, you can add the Urgentiechecker component to your website using the following tag:
 
 ```html
-<spreekuur-urgentiechecker agb-code="01054782" return-url="https://examplte-website.com/" environment="test"></spreekuur-urgentiechecker>
+<spreekuur-urgentiechecker agb-code="01054782" return-url="https://example-practice.nl/"></spreekuur-urgentiechecker>
 ```
 
 This should be added to the page where you want the Urgentiechecker to be displayed.
