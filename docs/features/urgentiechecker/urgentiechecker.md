@@ -55,7 +55,5 @@ Example usage (integration testing):
 ```
 
 #### Notes
-* The environment="acceptatie" attribute tells the component to use the acceptance back-end. If you omit environment, the component defaults to production.
-* The acceptance environment may be less stable than production and may receive breaking changes while we iterate — expect shorter notice for changes.
-* If your practice needs to be enabled in the acceptance environment (so triage results are correctly associated with your practice), contact the Spreekuur team to request access/registration for the practice AGB code.
+* The `environment="acceptatie"` attribute tells the component to use the acceptance back-end. If you omit environment, the component defaults to production.
 * Use the acceptance environment only for testing and integration validation; do not use it for live patient workflows.
