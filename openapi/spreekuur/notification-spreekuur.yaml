@@ -4,10 +4,20 @@ info:
   version: 1.0.0
 
 paths:
-  /Communication:
-    post:
+  /Communication/{id}:
+    put:
       summary: Send a notification to a patient
+      description: >
+        Public gateway endpoint used by the XIS to send a one-way notification to a patient in Spreekuur.nl.
+        Only `Communication` resources with category code `notification` are supported.
       operationId: sendNotification
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The logical id of the Communication resource supplied by the XIS.
       requestBody:
         required: true
         content:
@@ -15,8 +25,10 @@ paths:
             schema:
               $ref: '#/components/schemas/Communication'
       responses:
-        '201':
-          description: Notification created
+        '200':
+          description: Notification processed successfully
+        '400':
+          description: Invalid request, for example when the category is missing or not supported
 
 components:
   schemas:
@@ -28,13 +40,19 @@ components:
           type: string
           enum: [ Communication ]
           example: Communication
+        id:
+          type: string
+          description: The logical id of the Communication resource in the XIS.
+          example: "notification-12345"
         contained:
           type: array
+          description: Contains the Patient resource referenced by `Communication.recipient`.
           items:
             oneOf:
               - $ref: '#/components/schemas/Patient'
         topic:
           type: object
+          description: The subject of the notification shown to the patient.
           properties:
             text:
               type: string
@@ -62,6 +80,7 @@ components:
                       example: "notification"
         payload:
           type: array
+          description: The notification content shown to the patient.
           items:
             type: object
             properties:
@@ -70,6 +89,7 @@ components:
                 example: "Your lab results are available."
         recipient:
           type: array
+          description: References the contained Patient resource that should receive the notification.
           items:
             type: object
             required: [ reference ]
