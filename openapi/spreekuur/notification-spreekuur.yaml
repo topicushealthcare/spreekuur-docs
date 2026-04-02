@@ -1,4 +1,3 @@
-          description: The logical id of the Communication resource in the XIS.
 openapi: 3.0.3
 info:
   title: Spreekuur.nl Notification FHIR API
