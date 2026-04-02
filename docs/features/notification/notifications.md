@@ -42,14 +42,14 @@ sequenceDiagram
     participant Spreekuur.nl
     participant XIS
     
-    XIS->>Spreekuur.nl: (1) PUT: /Communication/{id}
+    XIS->>Spreekuur.nl: (1) POST: /Communication
     Spreekuur.nl->>Patient (User): (2) Notify patient of new notification
     Patient (User)->>Spreekuur.nl: (3) View notification in app
 ```
 
-1. The XIS sends a FHIR `Communication` resource to the Spreekuur.nl endpoint.
+1. The XIS sends a FHIR `Communication` resource to the Spreekuur.nl endpoint using a POST request.
    The request must represent a notification and therefore include a `Communication.category` entry with code `notification`.
-2. Spreekuur.nl will notify the patient of the new notification via mail and or push notification.
+2. Spreekuur.nl will notify the patient of the new notification via mail and/or push notification.
    1. When the patient is not registered in Spreekuur.nl yet, and the XIS provides an email address in the Communication resource,
       Spreekuur.nl will send an invitation to register.
 3. The patient can view the notification in the Spreekuur.nl app.
@@ -67,7 +67,7 @@ At minimum, the request should contain:
 Optionally, the contained `Patient` can include an email address in `Patient.telecom`. This is used by Spreekuur.nl
 to invite the patient to register when the patient is not yet known in the platform.
 
-The logical id in the request URL (`/Communication/{id}`) should be stable for the notification sent by the XIS.
+The logical id (`Communication.id`) is optional and will be assigned by Spreekuur.nl if not provided.
 
 ## Validation and error handling
 Spreekuur.nl validates whether the incoming `Communication` can be processed as a notification.

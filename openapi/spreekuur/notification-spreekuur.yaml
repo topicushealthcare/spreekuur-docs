@@ -4,20 +4,13 @@ info:
   version: 1.0.0
 
 paths:
-  /Communication/{id}:
-    put:
+  /Communication:
+    post:
       summary: Send a notification to a patient
       description: >
-        Public gateway endpoint used by the XIS to send a one-way notification to a patient in Spreekuur.nl.
+        Endpoint used by the XIS to send a one-way notification to a patient in Spreekuur.nl.
         Only `Communication` resources with category code `notification` are supported.
       operationId: sendNotification
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-          description: The logical id of the Communication resource supplied by the XIS.
       requestBody:
         required: true
         content:
@@ -25,8 +18,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Communication'
       responses:
-        '200':
-          description: Notification processed successfully
+        '201':
+          description: Notification created successfully
         '400':
           description: Invalid request, for example when the category is missing or not supported
 
@@ -40,10 +33,6 @@ components:
           type: string
           enum: [ Communication ]
           example: Communication
-        id:
-          type: string
-          description: The logical id of the Communication resource in the XIS.
-          example: "notification-12345"
         contained:
           type: array
           description: Contains the Patient resource referenced by `Communication.recipient`.
