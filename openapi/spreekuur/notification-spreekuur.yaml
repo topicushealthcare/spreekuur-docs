@@ -7,6 +7,9 @@ paths:
   /Communication:
     post:
       summary: Send a notification to a patient
+      description: >
+        Endpoint used by the XIS to send a one-way notification to a patient in Spreekuur.nl.
+        Only `Communication` resources with category code `notification` are supported.
       operationId: sendNotification
       requestBody:
         required: true
@@ -16,7 +19,9 @@ paths:
               $ref: '#/components/schemas/Communication'
       responses:
         '201':
-          description: Notification created
+          description: Notification created successfully
+        '400':
+          description: Invalid request, for example when the category is missing or not supported
 
 components:
   schemas:
@@ -30,11 +35,13 @@ components:
           example: Communication
         contained:
           type: array
+          description: Contains the Patient resource referenced by `Communication.recipient`.
           items:
             oneOf:
               - $ref: '#/components/schemas/Patient'
         topic:
           type: object
+          description: The subject of the notification shown to the patient.
           properties:
             text:
               type: string
@@ -62,6 +69,7 @@ components:
                       example: "notification"
         payload:
           type: array
+          description: The notification content shown to the patient.
           items:
             type: object
             properties:
@@ -70,6 +78,7 @@ components:
                 example: "Your lab results are available."
         recipient:
           type: array
+          description: References the contained Patient resource that should receive the notification.
           items:
             type: object
             required: [ reference ]
