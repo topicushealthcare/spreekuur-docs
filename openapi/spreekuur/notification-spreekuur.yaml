@@ -9,7 +9,7 @@ paths:
       summary: Send a notification to a patient
       description: >
         Endpoint used by the XIS to send a one-way notification to a patient in Spreekuur.nl.
-        Only `Communication` resources with category code `notification` are supported.
+        Only `Communication` resources with category code `melding` are supported.
       operationId: sendNotification
       requestBody:
         required: true
