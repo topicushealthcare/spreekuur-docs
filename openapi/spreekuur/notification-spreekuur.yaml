@@ -45,6 +45,7 @@ components:
           properties:
             text:
               type: string
+              maxLength: 500
               example: "Lab results available"
         status:
           type: string
@@ -75,6 +76,8 @@ components:
             properties:
               contentString:
                 type: string
+                minLength: 1
+                maxLength: 10000
                 example: "Your lab results are available."
         recipient:
           type: array
