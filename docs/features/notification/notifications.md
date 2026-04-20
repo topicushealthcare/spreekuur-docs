@@ -6,9 +6,9 @@ sidebar_position: 3
 
 | Environment | status            |
 |-------------|-------------------|
-| Test        | 🚧 In development |
-| Acceptance  | 🛑 Unavailable    |
-| Production  | 🛑 Unavailable    |
+| Test        | ✅ Available      |
+| Acceptance  | ✅ Available      |
+| Production  | ✅ Available      |
 
 **API specifications:**
 * [API Spreekuur.nl](api-spreekuur.mdx)
@@ -59,8 +59,8 @@ The notification endpoint expects a FHIR `Communication` resource.
 
 At minimum, the request should contain:
 - `Communication.category` with a coding whose `code` is `notification`
-- `Communication.topic.text` with the subject shown to the patient
-- `Communication.payload[].contentString` with the message body
+- `Communication.topic.text` with the subject shown to the patient (max. 500 characters)
+- `Communication.payload[].contentString` with the message body (min. 1, max. 10.000 characters)
 - `Communication.recipient[].reference` pointing to the contained `Patient`
 - A contained `Patient` resource with a BSN in `Patient.identifier`
 
@@ -75,5 +75,7 @@ Spreekuur.nl validates whether the incoming `Communication` can be processed as 
 Requests are rejected when:
 - `Communication.category` is missing
 - `Communication.category` does not identify the resource as a notification
+- `Communication.topic.text` exceeds 500 characters
+- `Communication.payload[].contentString` is empty or exceeds 10.000 characters
 
 See the [API Spreekuur.nl](api-spreekuur.mdx) page for the public request schema.
