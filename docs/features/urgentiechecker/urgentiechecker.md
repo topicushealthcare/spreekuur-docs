@@ -4,11 +4,11 @@ sidebar_position: 1
 # Urgentiechecker
 **Availability:**
 
-| Environment | status            |
-|-------------|-------------------|
-| Test        | 🚧 In development |
-| Acceptance  | 🚧 Available for integration testing (use `acceptatie`) |
-| Production  | 🛑 Unavailable    |
+| Environment | status       |
+|-------------|--------------|
+| Test        | ✅ Available |
+| Acceptance  | ✅ Available |
+| Production  | ✅ Available |
 
 ## Functional summary
 The Spreekuur.nl Urgentiechecker is a lightweight, web-component solution that can be embedded directly on a GP practice website. It lets patients quickly complete an online triage to receive an urgency assessment or self-care advice without first visiting Spreekuur.nl.
