@@ -48,7 +48,7 @@ sequenceDiagram
 ```
 
 1. The XIS sends a FHIR `Communication` resource to the Spreekuur.nl endpoint using a POST request.
-   The request must represent a notification and therefore include a `Communication.category` entry with code `notification`.
+   The request must represent a notification and therefore include a `Communication.category` entry with code `melding`.
 2. Spreekuur.nl will notify the patient of the new notification via mail and/or push notification.
    1. When the patient is not registered in Spreekuur.nl yet, and the XIS provides an email address in the Communication resource,
       Spreekuur.nl will send an invitation to register.
@@ -58,7 +58,7 @@ sequenceDiagram
 The notification endpoint expects a FHIR `Communication` resource.
 
 At minimum, the request should contain:
-- `Communication.category` with a coding whose `code` is `notification`
+- `Communication.category` with a coding whose `code` is `melding`
 - `Communication.topic.text` with the subject shown to the patient (max. 500 characters)
 - `Communication.payload[].contentString` with the message body (min. 1, max. 10.000 characters)
 - `Communication.recipient[].reference` pointing to the contained `Patient`
