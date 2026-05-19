@@ -19,7 +19,7 @@ and whether the appointment is already known in Spreekuur.nl, the update is hand
 or a cancellation.
 
 ::: info
-The XIS must include the `organisation_agb` header in the request, in FHIR token format:
+The XIS must include the `X-Organization-Identifier` header in the request, in FHIR token format:
 `http://fhir.nl/fhir/NamingSystem/agb-z|{agb-code}`. A XIS can only manage appointments for its own organisations.
 :::
 

@@ -63,4 +63,4 @@ also possible to use an authorization server provided by the XIS provider.
 Spreekuur.nl is a multi-tenant application. This means that multiple organizations can use the same application,
 but each organization has its own data and settings. 
 
-To distinguish between different organizations, all API requests from Spreekuur.nl to XIS and vice versa must include the organisation AGB code in the `organisation_agb` header. 
+To distinguish between different organizations, all API requests from Spreekuur.nl to XIS and vice versa must include the organisation AGB code in the `X-Organization-Identifier` header. 
