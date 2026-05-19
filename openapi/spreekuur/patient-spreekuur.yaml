@@ -9,13 +9,13 @@ paths:
       summary: Search for a patient by identifier (BSN or patientIdpId)
       operationId: searchPatient
       parameters:
-        - name: organization_agb
+        - name: X-Organization-Identifier
           in: header
           description: The AGB code of the organization that is performing the search.
           required: true
           schema:
             type: string
-            example: "12345678"
+            example: "http://fhir.nl/fhir/NamingSystem/agb-z|12345678"
       requestBody:
         required: true
         content:
@@ -105,7 +105,7 @@ paths:
           schema:
             type: string
             example: "http://fhir.nl/fhir/NamingSystem/bsn|123456782"
-        - name: organization_agb
+        - name: X-Organization-Identifier
           in: header
           description: The AGB code of the organization that is performing the search.
           required: true
@@ -123,7 +123,7 @@ paths:
       summary: Send invitation mail to a Patient to start using Spreekuur.nl or invite to an existing chat
       operationId: invitePatient
       parameters:
-        - name: organization_agb
+        - name: X-Organization-Identifier
           in: header
           description: The AGB code of the organization inviting the patient
           required: true
