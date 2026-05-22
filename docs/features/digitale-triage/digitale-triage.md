@@ -2,13 +2,6 @@
 sidebar_position: 1
 ---
 # Digitale triage
-**Availability:**
-
-| Environment | status       |
-|-------------|--------------|
-| Test        | ✅ Available  |
-| Acceptance  | ✅ Available  |
-| Production  | ✅ Available  |
 
 ## Functional summary
 The Spreekuur.nl Digitale Triage functionality lets other patient portals integrate the triage functionality of Spreekuur.nl
