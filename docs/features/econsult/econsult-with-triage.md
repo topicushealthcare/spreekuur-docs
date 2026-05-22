@@ -4,11 +4,11 @@ sidebar_position: 1
 # E-consult
 **Availability:**
 
-| Environment | status            |
-|-------------|-------------------|
-| Test        | 🚧 In development |
-| Acceptance  | 🛑 Unavailable    |
-| Production  | 🛑 Unavailable    |
+| Environment | status       |
+|-------------|--------------|
+| Test        | ✅ Available  |
+| Acceptance  | ✅ Available  |
+| Production  | ✅ Available  |
 
 **API specifications:**
 * [API XIS](api-xis.mdx)
