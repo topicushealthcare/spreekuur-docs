@@ -27,9 +27,9 @@ sequenceDiagram
     alt urgency = U1 or U2
         SU->>P: Show triage out
         P->>SU: Acknowledge triage out
-        SU->>shell: closeTriage(Encounter)
+        SU->>shell: triageOut(Encounter)
     else urgency = U3 tm U5 or no urgency
-        SU-->>shell: formCompletion(FHIR Bundle)
+        SU-->>shell: triageCompleted(FHIR Bundle)
     end
     shell->>P: Start follow-up action
 ```
@@ -38,10 +38,10 @@ sequenceDiagram
 3. Spreekuur.nl Digitale Triage starts the triage questionnaire.
 4. The patient fills in the triage questionnaire.
 5. If the urgency is high (U1 or U2), a triage out message* is shown to the patient. After the patient
-   acknowledges the message, a `closeTriage` postMessage is sent to the patient portal containing a FHIR
+   acknowledges the message, a `triageOut` postMessage is sent to the patient portal containing a FHIR
    `Encounter` resource with the urgency in `priority`. No full FHIR Bundle is sent on this path, because the
    patient is being routed to emergency follow-up.
-6. If the urgency is U3, U4, U5 or no urgency, a `formCompletion` postMessage is sent to the patient portal
+6. If the urgency is U3, U4, U5 or no urgency, a `triageCompleted` postMessage is sent to the patient portal
    containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`,
    `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation.
 7. The patient portal starts the follow-up action based on the received urgency.
@@ -68,7 +68,7 @@ A minimal embedding looks like this:
             return;
         }
         const { key, data } = event.data ?? {};
-        // Handle key === 'formCompletion' | 'closeTriage' | 'userEvent'
+        // Handle key === 'triageCompleted' | 'triageOut' | 'userEvent'
     });
 </script>
 ```
@@ -87,14 +87,14 @@ All messages from the Spreekuur.nl Digitale Triage to the patient portal share t
 
 ```ts
 interface PostMessage {
-    key: 'formCompletion' | 'closeTriage' | 'userEvent';
+    key: 'triageCompleted' | 'triageOut' | 'userEvent';
     data: unknown;
 }
 ```
 
 The `key` discriminator identifies the message type. The shape of `data` depends on the key.
 
-### `formCompletion`
+### `triageCompleted`
 Sent when the patient has completed the triage questionnaire and the resulting urgency is **U3, U4, U5, or no
 urgency**. The `data` field contains a FHIR Bundle describing the consultation:
 
@@ -112,7 +112,7 @@ Example:
 
 ```json
 {
-    "key": "formCompletion",
+    "key": "triageCompleted",
     "data": {
         "resourceType": "Bundle",
         "type": "collection",
@@ -430,7 +430,7 @@ Example:
 After this message is sent, the i-frame closes the wizard. The patient portal should remove or hide the i-frame
 and start the follow-up action based on the urgency.
 
-### `closeTriage`
+### `triageOut`
 Sent when the resulting urgency is **U1 or U2** ("triage out") or when the patient ended the questionnaire
 without completing it through the regular flow. The `data` field contains a FHIR `Encounter` resource with the
 urgency in `priority`. No full FHIR Bundle with clinical data is sent in this case, because the patient is being
@@ -440,7 +440,7 @@ Example:
 
 ```json
 {
-    "key": "closeTriage",
+    "key": "triageOut",
     "data": {
         "resourceType": "Encounter",
         "id": "1f2e3d4c-5b6a-7890-1234-567890abcdef",
@@ -463,7 +463,7 @@ Example:
 }
 ```
 
-For the U1/U2 path, the Digitale Triage first shows the triage out message to the patient. The `closeTriage`
+For the U1/U2 path, the Digitale Triage first shows the triage out message to the patient. The `triageOut`
 message is sent only after the patient acknowledges that message by closing it. The patient portal should remove
 or hide the i-frame and route the patient to the appropriate emergency follow-up.
 
@@ -482,7 +482,7 @@ patient portal to detect activity and implement its own session/inactivity logic
 ```
 
 `userEvent` messages start once the wizard is opened and stop when the wizard is closed (either by
-`formCompletion`, `closeTriage`, or the patient dismissing the wizard).
+`triageCompleted`, `triageOut`, or the patient dismissing the wizard).
 
 ## Messages from the patient portal to the Digitale Triage
 The Spreekuur.nl Digitale Triage does **not** listen for messages from the parent window. Communication is
@@ -491,6 +491,6 @@ data back to the i-frame.
 
 ## Patient cancellation
 If the patient dismisses the wizard before the triage completes (for example by navigating away inside the
-i-frame), no terminating `formCompletion` or `closeTriage` message is sent. The patient portal is responsible for
+i-frame), no terminating `triageCompleted` or `triageOut` message is sent. The patient portal is responsible for
 implementing its own inactivity handling — for example, by monitoring the `userEvent` messages and applying a
 timeout when no events have been received for a configurable period.
