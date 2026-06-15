@@ -111,7 +111,6 @@ components:
             `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`,
             `application/vnd.ms-excel` and
             `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`.
-            The actual file type is also detected from the file contents and must be one of these allowed types.
           example: "application/pdf"
         title:
           type: string
