@@ -90,11 +90,6 @@ The following constraints apply to attachments:
 | Maximum number of attachments per notification | 5                                                                                                                                                                                                                                                                                                                                    |
 | Allowed content types                          | `application/pdf`, `image/jpeg`, `image/png`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` |
 
-In addition to the `contentType` declared in the request, Spreekuur.nl detects the actual file type from the
-attachment contents. Both the declared `contentType` and the detected file type must be in the list of allowed
-content types. This prevents files of a disallowed type from being uploaded under a permitted `contentType`
-(for example an executable renamed to look like a PDF).
-
 ## Validation and error handling
 Spreekuur.nl validates whether the incoming `Communication` can be processed as a notification.
 
@@ -108,33 +103,5 @@ Requests with attachments are additionally rejected when:
 - the notification contains more than 5 attachments
 - an attachment is missing its `data`, `contentType` or `title`
 - an attachment uses a `contentType` that is not in the list of allowed content types
-- the file type detected from the attachment contents is not in the list of allowed content types
-
-When the request is rejected, no attachments are stored: attachments are only persisted once the complete
-notification is successfully processed.
 
 See the [API Spreekuur.nl](api-spreekuur.mdx) page for the public request schema.
-
-## Downloading attachments
-Attachments are not embedded in the notification shown in the app. Instead, the patient downloads each attachment
-on demand through Spreekuur.nl, which streams it from object storage (S3).
-
-```mermaid
-sequenceDiagram
-    actor Patient (User)
-    participant Spreekuur.nl
-    participant Storage (S3)
-
-    Patient (User)->>Spreekuur.nl: (1) GET /api/meldingen/{meldingId}/attachments/{attachmentId}
-    Spreekuur.nl->>Spreekuur.nl: (2) Verify the attachment belongs to a melding of this patient
-    Spreekuur.nl-->>Patient (User): (3) 302 Found, redirect to short-lived presigned URL
-    Patient (User)->>Storage (S3): (4) GET presigned URL
-    Storage (S3)-->>Patient (User): Attachment file
-```
-
-1. The patient (authenticated as a Spreekuur.nl user) requests an attachment by its melding and attachment id.
-2. Spreekuur.nl verifies that the requested attachment belongs to a notification addressed to the logged-in patient.
-   If the melding or attachment cannot be found for this patient, a `404 Not Found` is returned.
-3. Spreekuur.nl responds with a `302 Found` redirect to a short-lived presigned URL (valid for one minute).
-   The redirect is marked as non-cacheable. The presigned URL sets the download file name to the attachment `title`.
-4. The patient's client follows the redirect and downloads the file directly from object storage.
