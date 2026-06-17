@@ -70,7 +70,9 @@ components:
                       example: "melding"
         payload:
           type: array
-          description: The notification content shown to the patient.
+          description: >
+            The notification content shown to the patient. One entry holds the message text (`contentString`).
+            Optionally, up to 5 additional entries may each hold an attachment (`contentAttachment`).
           items:
             type: object
             properties:
@@ -79,6 +81,8 @@ components:
                 minLength: 1
                 maxLength: 10000
                 example: "Your lab results are available."
+              contentAttachment:
+                $ref: '#/components/schemas/Attachment'
         recipient:
           type: array
           description: References the contained Patient resource that should receive the notification.
@@ -90,6 +94,28 @@ components:
                 description: Reference to the Patient resource contained in this Communication
                 type: string
                 example: "#9876543210"
+    Attachment:
+      type: object
+      description: >
+        An attachment sent along with the notification. A notification may contain at most 5 attachments.
+      required: [ data, contentType, title ]
+      properties:
+        data:
+          type: string
+          format: byte
+          description: The file contents, base64-encoded.
+        contentType:
+          type: string
+          description: >
+            The MIME type of the file. Allowed values are `application/pdf`, `image/jpeg`, `image/png`,
+            `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`,
+            `application/vnd.ms-excel` and
+            `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`.
+          example: "application/pdf"
+        title:
+          type: string
+          description: The file name shown to the patient and used as the download file name.
+          example: "lab-results.pdf"
     Patient:
       type: object
       required: [ resourceType, id, identifier ]

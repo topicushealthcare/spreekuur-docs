@@ -20,6 +20,9 @@ Typical use cases are:
 * Inviting a patient for a vaccination
 * Etc.
 
+A notification can optionally include one or more attachments (e.g. a PDF lab report or a scanned document).
+The patient can view and download these attachments together with the message in the Spreekuur.nl app.
+
 ## Technical summary
 The notification API consists of a single FHIR `Communication` endpoint provided by Spreekuur.nl.
 The XIS sends a notification to this endpoint. 
@@ -69,6 +72,24 @@ to invite the patient to register when the patient is not yet known in the platf
 
 The logical id (`Communication.id`) is optional and will be assigned by Spreekuur.nl if not provided.
 
+### Attachments
+A notification may optionally contain attachments. Each attachment is sent as a `Communication.payload[]` entry
+holding a `contentAttachment` instead of a `contentString`. Per attachment the following fields are required:
+
+- `Communication.payload[].contentAttachment.data` — the file contents, base64-encoded
+- `Communication.payload[].contentAttachment.contentType` — the MIME type of the file
+- `Communication.payload[].contentAttachment.title` — the file name shown to the patient and used as the download
+  file name
+
+A single `Communication` can contain both the message (`contentString`) and one or more attachment payload entries.
+
+The following constraints apply to attachments:
+
+| Constraint                                     | Value                                                                                                                                                                                                                                                                                                                                |
+|------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Maximum number of attachments per notification | 5                                                                                                                                                                                                                                                                                                                                    |
+| Allowed content types                          | `application/pdf`, `image/jpeg`, `image/png`, `application/msword`, `application/vnd.openxmlformats-officedocument.wordprocessingml.document`, `application/vnd.ms-excel`, `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` |
+
 ## Validation and error handling
 Spreekuur.nl validates whether the incoming `Communication` can be processed as a notification.
 
@@ -77,5 +98,10 @@ Requests are rejected when:
 - `Communication.category` does not identify the resource as a notification
 - `Communication.topic.text` exceeds 500 characters
 - `Communication.payload[].contentString` is empty or exceeds 10.000 characters
+
+Requests with attachments are additionally rejected when:
+- the notification contains more than 5 attachments
+- an attachment is missing its `data`, `contentType` or `title`
+- an attachment uses a `contentType` that is not in the list of allowed content types
 
 See the [API Spreekuur.nl](api-spreekuur.mdx) page for the public request schema.
