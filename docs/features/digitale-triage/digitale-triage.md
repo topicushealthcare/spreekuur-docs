@@ -50,14 +50,18 @@ sequenceDiagram
 
 ## Embedding the i-frame
 The Spreekuur.nl Digitale Triage is delivered as a single-page web application that is intended to be embedded
-as an i-frame inside the patient portal. The URL of the i-frame is provided by Topicus.Healthcare per environment
-(test, acceptance, production).
+as an i-frame inside the patient portal. The base URL of the i-frame is provided by Topicus.Healthcare per
+environment (test, acceptance, production).
+
+The i-frame is configured entirely through the URL: a required portal path segment plus optional query
+parameters. There is no initialization message — the patient starts the triage from within the i-frame itself,
+and the patient portal only listens for the [postMessage messages](#postmessage-messages) the i-frame sends back.
 
 A minimal embedding looks like this:
 
 ```html
 <iframe
-    src="https://<digitale-triage-url>/"
+    src="https://<digitale-triage-url>/<portaal>?agb=12345678&zelfzorgbeschikbaar=true"
     title="Spreekuur.nl Digitale Triage"
 ></iframe>
 
@@ -73,8 +77,23 @@ A minimal embedding looks like this:
 </script>
 ```
 
-The i-frame does not require any query parameters, hash fragments, or initialization messages.
-The patient starts the triage from within the i-frame itself.
+### Configuration parameters
+The URL takes the shape `https://<digitale-triage-url>/<portaal>?agb=<agb>&zelfzorgbeschikbaar=<true|false>`.
+
+| Parameter             | Location     | Required | Allowed values                          | Description                                                                                                                                                             |
+| --------------------- | ------------ | -------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `portaal`             | path segment | Yes      | `mgn`, `corycare`, `advitronics`, `uzo` | Identifies the patient portal embedding the triage. The value is matched case-insensitively. A missing or unknown value shows the "portaal onbekend" (unknown portal) page instead of the triage. |
+| `agb`                 | query param  | No       | AGB code (string)                       | The AGB code of the practice the triage is performed for. Used by Spreekuur.nl to determine the practice context of the consultation.                                  |
+| `zelfzorgbeschikbaar` | query param  | No       | `true`, `false` (default)               | Whether self-care advice (*zelfzorgadvies*) is available as a possible triage outcome. Only the exact string `true` enables it; any other value (or omitting the parameter) disables it. |
+
+The `portaal` values map to the following portals:
+
+| Slug          | Portal            |
+| ------------- | ----------------- |
+| `mgn`         | Mijngezondheid.net |
+| `corycare`    | Cory.care         |
+| `advitronics` | Advitronics       |
+| `uzo`         | UW Zorg Online    |
 
 ### Origin validation
 The Spreekuur.nl Digitale Triage currently sends messages with `targetOrigin: '*'`. The patient portal **must**
