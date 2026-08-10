@@ -83,11 +83,11 @@ A minimal embedding looks like this:
 ### Configuration parameters
 The URL takes the shape `https://<digitale-triage-url>/<portaal>?agb=<agb>&zelfzorgbeschikbaar=<true|false>`.
 
-| Parameter             | Location     | Required | Allowed values                          | Description                                                                                                                                                             |
-| --------------------- | ------------ | -------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `portaal`             | path segment | Yes      | `mgn`, `corycare`, `advitronics`, `uzo` | Identifies the patient portal embedding the triage. The value is matched case-insensitively. A missing or unknown value shows the "portaal onbekend" (unknown portal) page instead of the triage. |
-| `agb`                 | query param  | No       | AGB code (string)                       | The AGB code of the practice the triage is performed for. Used by Spreekuur.nl to determine the practice context of the consultation.                                  |
-| `zelfzorgbeschikbaar` | query param  | No       | `true`, `false` (default)               | Whether self-care advice (*zelfzorgadvies*) is available as a possible triage outcome. Only the exact string `true` enables it; any other value (or omitting the parameter) disables it. |
+| Parameter             | Location     | Required                                | Allowed values                          | Description                                                                                                                                                             |
+| --------------------- | ------------ |-----------------------------------------| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `portaal`             | path segment | Yes                                     | `mgn`, `corycare`, `advitronics`, `uzo` | Identifies the patient portal embedding the triage. The value is matched case-insensitively. A missing or unknown value shows the "portaal onbekend" (unknown portal) page instead of the triage. |
+| `agb`                 | query param  | Yes (for all portaal types, except mgn) | AGB code (string)                       | The AGB code of the practice the triage is performed for. Used by Spreekuur.nl to determine the practice context of the consultation.                                  |
+| `zelfzorgbeschikbaar` | query param  | No                                      | `true`, `false` (default)               | Whether self-care advice (*zelfzorgadvies*) is available as a possible triage outcome. Only the exact string `true` enables it; any other value (or omitting the parameter) disables it. |
 
 The `portaal` values map to the following portals:
 
