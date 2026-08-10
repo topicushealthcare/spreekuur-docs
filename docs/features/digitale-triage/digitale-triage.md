@@ -28,8 +28,10 @@ sequenceDiagram
         SU->>P: Show triage out
         P->>SU: Acknowledge triage out
         SU->>shell: triageOut(Encounter)
-    else urgency = U3 tm U5 or no urgency
+    else urgency = U3 tm U4, U5 (no self-care advice available or not accepted by the patient) or no urgency
         SU-->>shell: triageCompleted(FHIR Bundle)
+    else urgency = U5 (self-care advice available and accepted)
+        SU-->>shell: triageCompletedWithZelfzorg(FHIR Bundle)    
     end
     shell->>P: Start follow-up action
 ```
@@ -41,10 +43,11 @@ sequenceDiagram
    acknowledges the message, a `triageOut` postMessage is sent to the patient portal containing a FHIR
    `Encounter` resource with the urgency in `priority`. No full FHIR Bundle is sent on this path, because the
    patient is being routed to emergency follow-up.
-6. If the urgency is U3, U4, U5 or no urgency, a `triageCompleted` postMessage is sent to the patient portal
+6. If the urgency is U3, U4, U5 (no self-care advice available, or patient does not accept it) or no urgency, a `triageCompleted` postMessage is sent to the patient portal
    containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`,
    `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation.
-7. The patient portal starts the follow-up action based on the received urgency.
+7. If the urgency is U5 and self-care advice is available the advice is shown to the patient. If the patient accepts the self-care advice, a `triageCompletedWithZelfzorg` postMessage is sent to the patient portal containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`, `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation. If the patient does not accept the self-care advice, a `triageCompleted` postMessage is sent to the patient portal containing a FHIR Bundle.
+8. The patient portal starts the follow-up action based on the received urgency.
 
 *The triage out message advises the patient to contact the practice by the emergency phone number.
 
@@ -106,12 +109,16 @@ All messages from the Spreekuur.nl Digitale Triage to the patient portal share t
 
 ```ts
 interface PostMessage {
-    key: 'triageCompleted' | 'triageOut' | 'userEvent';
+    key: 'triageCompleted' | 'triageCompletedWithZelfzorg' | 'triageOut' | 'userEvent';
     data: unknown;
 }
 ```
 
 The `key` discriminator identifies the message type. The shape of `data` depends on the key.
+
+### `triageCompletedWithZelfzorg`
+
+Sent when the patient has completed the triage questionnaire, the resulting urgency is **U5** where self-care advice (*zelfzorgadvies*) is available **and** the user has accepted the self-care advice. The `data` field contains a FHIR Bundle describing the consultation, identical to the `triageCompleted` message.
 
 ### `triageCompleted`
 Sent when the patient has completed the triage questionnaire and the resulting urgency is **U3, U4, U5, or no
