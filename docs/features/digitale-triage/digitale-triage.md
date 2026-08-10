@@ -28,7 +28,7 @@ sequenceDiagram
         SU->>P: Show triage out
         P->>SU: Acknowledge triage out
         SU->>shell: triageOut(Encounter)
-    else urgency = U3 tm U4, U5 (no self-care advice available or not accepted by the patient) or no urgency
+    else urgency = U3 and U4 or U5 (no self-care advice available or not accepted by the patient) or no urgency
         SU-->>shell: triageCompleted(FHIR Bundle)
     else urgency = U5 (self-care advice available and accepted)
         SU-->>shell: triageCompletedWithZelfzorg(FHIR Bundle)    
