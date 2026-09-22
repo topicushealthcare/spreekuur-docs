@@ -65,12 +65,28 @@ At minimum, the request should contain:
 - `Communication.topic.text` with the subject shown to the patient (max. 500 characters)
 - `Communication.payload[].contentString` with the message body (min. 1, max. 10.000 characters)
 - `Communication.recipient[].reference` pointing to the contained `Patient`
-- A contained `Patient` resource with a BSN in `Patient.identifier`
+- A contained `Patient` resource with exactly one patient identifier in `Patient.identifier`, see
+  [Identifying the patient](#identifying-the-patient)
 
 Optionally, the contained `Patient` can include an email address in `Patient.telecom`. This is used by Spreekuur.nl
 to invite the patient to register when the patient is not yet known in the platform.
 
 The logical id (`Communication.id`) is optional and will be assigned by Spreekuur.nl if not provided.
+
+### Identifying the patient
+The contained `Patient` identifies the patient with **exactly one** of the following identifiers:
+
+| Identifier | `Patient.identifier[].system` | `Patient.identifier[].value` |
+|------------|-------------------------------|------------------------------|
+| BSN | `http://fhir.nl/fhir/NamingSystem/bsn` | The BSN of the patient |
+| Spreekuur.nl patient id | `http://spreekuur.nl/fhir/NamingSystem/patientIdpId` | The patient id issued by Spreekuur.nl, formatted as a UUID |
+
+Use the Spreekuur.nl patient id when the BSN is not available to the sending system, or when the BSN should not be
+sent over the interface. Both identifiers resolve to the same patient, so the notification reaches the patient in the
+same way either way.
+
+Sending both identifiers in the same `Communication` is rejected, because Spreekuur.nl does not verify that they
+refer to the same patient.
 
 ### Attachments
 A notification may optionally contain attachments. Each attachment is sent as a `Communication.payload[]` entry
@@ -96,6 +112,9 @@ Spreekuur.nl validates whether the incoming `Communication` can be processed as 
 Requests are rejected when:
 - `Communication.category` is missing
 - `Communication.category` does not identify the resource as a notification
+- the contained `Patient` holds neither a BSN nor a Spreekuur.nl patient id
+- the contained `Patient` holds both a BSN and a Spreekuur.nl patient id
+- the Spreekuur.nl patient id is not a valid UUID
 - `Communication.topic.text` exceeds 500 characters
 - `Communication.payload[].contentString` is empty or exceeds 10.000 characters
 
