@@ -79,7 +79,7 @@ The contained `Patient` identifies the patient with **exactly one** of the follo
 | Identifier | `Patient.identifier[].system` | `Patient.identifier[].value` |
 |------------|-------------------------------|------------------------------|
 | BSN | `http://fhir.nl/fhir/NamingSystem/bsn` | The BSN of the patient |
-| Spreekuur.nl patient id | `http://spreekuur.nl/fhir/NamingSystem/patientIdpId` | The patient id issued by Spreekuur.nl, formatted as a UUID |
+| Spreekuur.nl patient id | `http://spreekuur.nl/fhir/NamingSystem/patientIdpId` | The patient id issued by the Topicus Healthcare Patient Identity Provider, formatted as a UUID |
 
 Use the Spreekuur.nl patient id when the BSN is not available to the sending system, or when the BSN should not be
 sent over the interface. Both identifiers resolve to the same patient, so the notification reaches the patient in the
