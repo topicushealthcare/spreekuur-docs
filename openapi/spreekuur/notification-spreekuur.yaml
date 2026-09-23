@@ -22,6 +22,10 @@ paths:
           description: Notification created successfully
         '400':
           description: Invalid request, for example when the category is missing or not supported
+        '422':
+          description: >
+            The notification could not be processed, for example when the contained Patient holds neither a BSN nor a
+            Spreekuur.nl patient id, holds both of them, or when the Spreekuur.nl patient id is not a valid UUID.
 
 components:
   schemas:
@@ -129,13 +133,19 @@ components:
           example: "9876543210"
         identifier:
           type: array
+          description: >
+            Exactly one patient identifier is required: either a BSN
+            (`http://fhir.nl/fhir/NamingSystem/bsn`) or the Spreekuur.nl patient id
+            (`http://spreekuur.nl/fhir/NamingSystem/patientIdpId`), formatted as a UUID. Sending both is rejected.
           items:
             type: object
             required: [ system, value ]
-            description: The BSN is required to identify the patient.
             properties:
               system:
                 type: string
+                enum:
+                  - "http://fhir.nl/fhir/NamingSystem/bsn"
+                  - "http://spreekuur.nl/fhir/NamingSystem/patientIdpId"
                 example: "http://fhir.nl/fhir/NamingSystem/bsn"
               value:
                 type: string
