@@ -22,32 +22,64 @@ sequenceDiagram
 
     P->>shell: Start Digitale Triage
     shell->>SU: Open Spreekuur.nl Digitale Triage i-frame
-    SU->>SU: Start questionnaire
-    P->>SU: Answer questionnaire questions
-    alt urgency = U1 or U2
-        SU->>P: Show triage out
-        P->>SU: Acknowledge triage out
-        SU->>shell: triageOut(Encounter)
-    else urgency = U3 and U4 or U5 (no self-care advice available or not accepted by the patient) or no urgency
-        SU-->>shell: triageCompleted(FHIR Bundle)
-    else urgency = U5 (self-care advice available and accepted)
-        SU-->>shell: triageCompletedWithZelfzorg(FHIR Bundle)    
+    P->>SU: Choose complaint area
+    alt zelfzorgbeschikbaar=true and complaint area has an urgency check
+        SU->>SU: Start urgency check
+        P->>SU: Answer urgency check questions
+        alt urgency = U1 or U2
+            SU->>P: Show triage out
+            P->>SU: Close triage out
+            SU-->>shell: triageOut(Encounter)
+        else self-care advice available
+            SU->>P: Show self-care advice
+            alt patient accepts self-care advice
+                P->>SU: Accept self-care advice
+                SU-->>shell: triageCompletedWithZelfzorg(FHIR Bundle)
+            else patient declines self-care advice
+                P->>SU: Decline self-care advice
+                Note over SU: No message is sent yet. The patient continues to the<br/>full questionnaire or to the urgent-care referral
+            end
+        else no self-care advice
+            Note over SU: The patient continues to the full questionnaire
+        end
+    end
+    opt full questionnaire needed
+        SU->>SU: Start full questionnaire
+        P->>SU: Answer full questionnaire questions
+        alt urgency = U1 or U2
+            SU->>P: Show triage out
+            P->>SU: Close triage out
+            SU-->>shell: triageOut(Encounter)
+        else urgency = U3, U4, U5 or no urgency
+            SU-->>shell: triageCompleted(FHIR Bundle)
+        end
     end
     shell->>P: Start follow-up action
 ```
 1. The patient starts the Digitale Triage in a third party patient portal.
 2. Spreekuur.nl Digitale Triage is opened in an i-frame in the patient portal.
-3. Spreekuur.nl Digitale Triage starts the triage questionnaire.
-4. The patient fills in the triage questionnaire.
-5. If the urgency is high (U1 or U2), a triage out message* is shown to the patient. After the patient
-   acknowledges the message, a `triageOut` postMessage is sent to the patient portal containing a FHIR
-   `Encounter` resource with the urgency in `priority`. No full FHIR Bundle is sent on this path, because the
-   patient is being routed to emergency follow-up.
-6. If the urgency is U3, U4, U5 (no self-care advice available, or patient does not accept it) or no urgency, a `triageCompleted` postMessage is sent to the patient portal
-   containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`,
-   `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation.
-7. If the urgency is U5 and self-care advice is available the advice is shown to the patient. If the patient accepts the self-care advice, a `triageCompletedWithZelfzorg` postMessage is sent to the patient portal containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`, `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation. If the patient does not accept the self-care advice, a `triageCompleted` postMessage is sent to the patient portal containing a FHIR Bundle.
-8. The patient portal starts the follow-up action based on the received urgency.
+3. The patient chooses a complaint area (*klachtgebied*).
+4. If `zelfzorgbeschikbaar=true` and the chosen complaint area has an urgency check (*urgentiecheck*), the i-frame
+   first starts this short questionnaire. Otherwise (self-care advice is not available, or the complaint area has no
+   urgency check) the i-frame goes straight to the full questionnaire (*anamnese*) in step 6.
+5. The patient fills in the urgency check. The outcome is one of:
+   - **U1 or U2**: the triage out flow in step 7 follows.
+   - **Self-care advice**: the self-care advice (*zelfzorgadvies*) is shown to the patient.
+     - If the patient accepts the advice, a `triageCompletedWithZelfzorg` postMessage is sent to the patient portal
+       containing a FHIR Bundle and the i-frame closes. The Bundle contains the `Encounter`, `Observation[S-line]`,
+       `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation.
+     - If the patient declines the advice, no message is sent yet. The patient continues inside the i-frame to the
+       full questionnaire (step 6), or, when the urgency requires it, to the urgent-care referral (step 7). Only the
+       outcome of that next step is sent to the patient portal.
+   - **Otherwise**: the patient continues to the full questionnaire (step 6).
+6. The patient fills in the full questionnaire. If the urgency is U1 or U2, the triage out flow in step 7 follows.
+   If the urgency is U3, U4, U5 or there is no urgency, a `triageCompleted` postMessage is sent to the patient
+   portal containing a FHIR Bundle with the same resources as above.
+7. If the urgency is high (U1 or U2), from either the urgency check or the full questionnaire, a triage out
+   message* is shown to the patient. After the patient closes the message, a `triageOut` postMessage is sent to
+   the patient portal containing a FHIR `Encounter` resource with the urgency in `priority`. No full FHIR Bundle is
+   sent on this path, because the patient is being routed to emergency follow-up.
+8. The patient portal starts the follow-up action based on the received message and urgency.
 
 *The triage out message advises the patient to contact the practice by the emergency phone number.
 
@@ -75,7 +107,7 @@ A minimal embedding looks like this:
             return;
         }
         const { key, data } = event.data ?? {};
-        // Handle key === 'triageCompleted' | 'triageOut' | 'userEvent'
+        // Handle key === 'triageCompleted' | 'triageCompletedWithZelfzorg' | 'triageOut' | 'userEvent'
     });
 </script>
 ```
