@@ -28,10 +28,15 @@ sequenceDiagram
         SU->>P: Show triage out
         P->>SU: Acknowledge triage out
         SU->>shell: triageOut(Encounter)
-    else urgency = U3 and U4 or U5 (no self-care advice available or not accepted by the patient) or no urgency
+    else urgency = U3 and U4 or U5 (no self-care advice available) or no urgency
         SU-->>shell: triageCompleted(FHIR Bundle)
-    else urgency = U5 (self-care advice available and accepted)
-        SU-->>shell: triageCompletedWithZelfzorg(FHIR Bundle)    
+    else urgency = U5 (self-care advice available)
+        SU->>P: Show self-care advice
+        alt patient accepts self-care advice
+            SU-->>shell: triageCompletedWithZelfzorg(FHIR Bundle)
+        else patient declines self-care advice
+            Note over SU: No message is sent yet. The patient continues to the full questionnaire<br/>or the urgent-care referral, and only that outcome is sent (triageCompleted or triageOut)
+        end
     end
     shell->>P: Start follow-up action
 ```
@@ -43,10 +48,10 @@ sequenceDiagram
    acknowledges the message, a `triageOut` postMessage is sent to the patient portal containing a FHIR
    `Encounter` resource with the urgency in `priority`. No full FHIR Bundle is sent on this path, because the
    patient is being routed to emergency follow-up.
-6. If the urgency is U3, U4, U5 (no self-care advice available, or patient does not accept it) or no urgency, a `triageCompleted` postMessage is sent to the patient portal
+6. If the urgency is U3, U4, U5 (no self-care advice available) or no urgency, a `triageCompleted` postMessage is sent to the patient portal
    containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`,
    `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation.
-7. If the urgency is U5 and self-care advice is available the advice is shown to the patient. If the patient accepts the self-care advice, a `triageCompletedWithZelfzorg` postMessage is sent to the patient portal containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`, `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation. If the patient does not accept the self-care advice, a `triageCompleted` postMessage is sent to the patient portal containing a FHIR Bundle.
+7. If the urgency is U5 and self-care advice is available the advice is shown to the patient. If the patient accepts the self-care advice, a `triageCompletedWithZelfzorg` postMessage is sent to the patient portal containing a FHIR Bundle. The Bundle contains the `Encounter`, `Observation[S-line]`, `Observation[survey scores]`, and `QuestionnaireResponse` resources describing the consultation. If the patient declines the self-care advice, no message is sent yet: the patient continues inside the i-frame to the full questionnaire (anamnese) or to the urgent-care referral, and only that outcome is sent to the patient portal (`triageCompleted`, or `triageOut` for U1/U2 or urgent care).
 8. The patient portal starts the follow-up action based on the received urgency.
 
 *The triage out message advises the patient to contact the practice by the emergency phone number.
@@ -75,7 +80,7 @@ A minimal embedding looks like this:
             return;
         }
         const { key, data } = event.data ?? {};
-        // Handle key === 'triageCompleted' | 'triageOut' | 'userEvent'
+        // Handle key === 'triageCompleted' | 'triageCompletedWithZelfzorg' | 'triageOut' | 'userEvent'
     });
 </script>
 ```
